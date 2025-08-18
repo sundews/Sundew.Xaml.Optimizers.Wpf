@@ -75,7 +75,8 @@ public sealed class ResourceDictionary : SystemResourceDictionary
                         this.MergedDictionaries.Add(actualResourceDictionary);
                         var newEntry = new Entry(actualResourceDictionary, this);
                         return newEntry;
-                    }, (uri, existingEntry) =>
+                    },
+                    (uri, existingEntry) =>
                     {
                         lock (LockObject)
                         {
