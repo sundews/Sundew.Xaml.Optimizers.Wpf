@@ -212,3 +212,4 @@ ModelManifest.xml
 /Sources/Sundew.Xaml.Optimizations/Sundew.Xaml.Optimizations.xml
 *.DotSettings
 /Sources/NuGet.Config
+*.binlog

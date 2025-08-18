@@ -35,7 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.43">
+    <ProjectReference Include="..\Sundew.Xaml.Optimizations.Wpf\Sundew.Xaml.Optimizations.Wpf.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.43">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
