@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sundew.Xaml.Optimizations.Wpf\Sundew.Xaml.Optimizations.Wpf.csproj">
+    <ProjectReference Include="..\Sundew.Xaml.Optimizations.Wpf\Sundew.Xaml.Optimizations.Wpf.csproj" PrivateAssets="all">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
 
@@ -73,9 +73,9 @@
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-      <OutputFiles Include="$(OutputPath)\$(AssemblyName).m.dll;$(OutputPath)**\System*.dll;$(OutputPath)Sundew.Xaml.Optimization.dll" />
+			<OutputFiles Include="$(OutputPath)\$(AssemblyName).m.dll;$(OutputPath)**\System*.dll;$(OutputPath)Sundew.Xaml.Optimization.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(IntermediateOutputPath)\package\tools\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="False" />
+		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(IntermediateOutputPath)\package\tools\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="False" />
   </Target>
   
 </Project>

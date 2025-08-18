@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net9.0-windows</TargetFrameworks>
+    <TargetFrameworks>net461;net9.0-windows10.0.17763.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
     <OutputType>Library</OutputType>
     <UseWPF>true</UseWPF>
