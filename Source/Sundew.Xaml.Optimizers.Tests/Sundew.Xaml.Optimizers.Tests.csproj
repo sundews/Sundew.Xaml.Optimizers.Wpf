@@ -7,7 +7,7 @@
     <UseWpf>true</UseWpf>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Sundew.Xaml.UnitTests.xml</DocumentationFile>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
