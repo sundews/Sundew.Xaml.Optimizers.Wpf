@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:todos="clr-namespace:Sundew.Xaml.Optimizations.TestData.Todos"
         xmlns:bouncer="clr-namespace:Sundew.Xaml.Optimizations.TestData.Bouncer"
-        xmlns:testData="clr-namespace:Sundew.Xaml.Optimizations.TestData"
+        xmlns:testData="clr-namespace:Sundew.Xaml.Optimizations.TestData" xmlns:gallery="clr-namespace:Sundew.Xaml.Optimizations.TestData.Gallery"
         mc:Ignorable="d"
         Title="DemoWindow" 
         Height="800" Width="1200"
@@ -79,10 +79,35 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
         </Grid>
+        <Grid Grid.Row="1" Grid.Column="2" DataContext="{Binding GalleryDemo}">
+            <TextBlock FontSize="24" FontWeight="Bold">Gallery Demo</TextBlock>
+            <Menu Grid.Row="1" Grid.ColumnSpan="3">
+                <MenuItem Header="Reload"/>
+            </Menu>
+            <TextBlock Text="Compiled" Grid.Row="2" FontSize="16" FontWeight="Bold" />
+            <gallery:CompiledGalleryControl x:Name="CompiledGalleryControl" Grid.Row="3" Grid.RowSpan="3"/>
+            <TextBlock Text="Compiled and phased" Grid.Row="2" Grid.Column="1" FontSize="16" FontWeight="Bold" />
+            <gallery:CompiledAndPhasedGalleryControl x:Name="CompiledAndPhasedGalleryControl" Grid.Row="3" Grid.Column="1" Grid.RowSpan="3"/>
+            <TextBlock Text="Reflection" Grid.Row="2" FontSize="16" FontWeight="Bold" Grid.Column="2"/>
+            <gallery:ReflectionGalleryControl x:Name="ReflectionGalleryControl" Grid.Row="3" Grid.Column="2" Grid.RowSpan="3"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0.5*"/>
+            <ColumnDefinition Width="0.75*"/>
+            <ColumnDefinition Width="1.75*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

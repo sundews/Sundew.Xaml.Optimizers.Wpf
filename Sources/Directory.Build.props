@@ -1,0 +1,34 @@
+<Project>
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Version>3.0</Version>
+    <OutputPath>bin/$(Configuration)</OutputPath>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <Company>Sundews</Company>
+    <Authors>Kim Hugener-Ohlsen</Authors>
+    <Copyright>Kim Hugener-Ohlsen</Copyright>
+    <RepositoryUrl>https://github.com/sundews/Sundew.Xaml.Optimizations</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sundews/Sundew.Xaml.Optimizations</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <PackageReadmeFile>docs/README.md</PackageReadmeFile>
+    <PackageReleaseNotes>
+    </PackageReleaseNotes>
+    <Configurations>Debug;Release;Debug-Publish;Release-Publish;Release-Stable</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>    
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedFiles Include="$(GeneratedAssemblyInfoFile)"/>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\docs"/>
+  </ItemGroup>
+  <Import Project="Directory.Build.props.user" Condition="Exists('Directory.Build.props.user')"/>
+</Project>

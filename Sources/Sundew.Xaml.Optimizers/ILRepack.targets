@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="ILRepacker" BeforeTargets="PostBuildEvent" AfterTargets="Build">
+
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)**\*.dll" />
+      <InputAssemblies Remove="$(OutputPath)**\*.m.dll" />
+      <InputAssemblies Remove="$(OutputPath)$(AssemblyName).dll" />
+      <InputAssemblies Remove="$(OutputPath)**\Microsoft.Build*.dll" />
+      <InputAssemblies Remove="$(OutputPath)**\System*.dll" />
+      <InputAssemblies Remove="$(OutputPath)Sundew.Xaml.Optimization.dll" />
+    </ItemGroup>
+
+    <ILRepack
+           Parallel="true"
+           Internalize="true"
+           InputAssemblies="$(OutputPath)\$(AssemblyName).dll;@(InputAssemblies)"
+           InternalizeExclude="Sundew.Packaging.Publish"
+           TargetKind="Dll"
+           LibraryPath="$(OutputPath)"
+           OutputFile="$(OutputPath)\$(AssemblyName).m.dll" />
+
+  </Target>
+</Project>

@@ -1,8 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Sundew.Xaml.Optimizations.TestData</RootNamespace>
   </PropertyGroup>
@@ -29,6 +29,12 @@
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\CultureInfoDateTimeConverter.cs" Link="CultureInfoDateTimeConverter.cs" />
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\DemoViewModel.cs" Link="DemoViewModel.cs" />
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\DemoWindow.xaml.cs" Link="DemoWindow.xaml.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\CompiledGalleryControl.xaml.cs" Link="Gallery\CompiledGalleryControl.xaml.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\CompiledGalleryControlBindingConnector.cs" Link="Gallery\CompiledGalleryControlBindingConnector.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\GalleryViewModel.cs" Link="Gallery\GalleryViewModel.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\PhotoViewModel.cs" Link="Gallery\PhotoViewModel.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\PhotoViewModelBindingConnector.cs" Link="Gallery\PhotoViewModelBindingConnector.cs" />
+    <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\ReflectionGalleryControl.xaml.cs" Link="Gallery\ReflectionGalleryControl.xaml.cs" />
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\NotNullToVisibilityConverter.cs" Link="NotNullToVisibilityConverter.cs" />
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\TextWindow.xaml.cs" Link="TextWindow.xaml.cs" />
     <Compile Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Todos\CompiledTodosControl.xaml.cs" Link="Todos\CompiledTodosControl.xaml.cs" />
@@ -43,13 +49,14 @@
 
   <ItemGroup>
     <Folder Include="Bouncer\" />
+    <Folder Include="Gallery\" />
   </ItemGroup>
 
   <ItemGroup>
     <ApplicationDefinition Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\App.xaml" Link="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <PackageReference Include="Sundew.Xaml.Optimizer" Version="3.0.0-pre-u20200525-103306">
+    <PackageReference Include="Sundew.Xaml.Optimizer" Version="3.0.0-u20250817-214734-local">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>compile; runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -60,6 +67,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\DemoWindow.xaml" Link="DemoWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\CompiledGalleryControl.xaml" Link="Gallery\CompiledGalleryControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\Gallery\ReflectionGalleryControl.xaml" Link="Gallery\ReflectionGalleryControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="..\Sundew.Xaml.Optimizations.TestData.ApiDesigner.Wpf\TextWindow.xaml" Link="TextWindow.xaml">

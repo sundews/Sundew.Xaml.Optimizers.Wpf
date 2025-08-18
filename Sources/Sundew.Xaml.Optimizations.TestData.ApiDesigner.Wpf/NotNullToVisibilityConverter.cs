@@ -4,30 +4,29 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Sundew.Xaml.Optimizations.TestData
+namespace Sundew.Xaml.Optimizations.TestData;
+
+public class NotNullToVisibilityConverter : MarkupExtension, IValueConverter
 {
-    public class NotNullToVisibilityConverter : MarkupExtension, IValueConverter
+    public bool Invert { get; set; }
+
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public bool Invert { get; set; }
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        if (value != null ^ Invert)
         {
-            if (value != null ^ Invert)
-            {
-                return Visibility.Visible;
-            }
-
-            return Visibility.Collapsed;
+            return Visibility.Visible;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return Visibility.Collapsed;
+    }
 
-        public override object ProvideValue(IServiceProvider serviceProvider)
-        {
-            return this;
-        }
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override object ProvideValue(IServiceProvider serviceProvider)
+    {
+        return this;
     }
 }

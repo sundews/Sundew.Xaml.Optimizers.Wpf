@@ -1,14 +1,13 @@
-﻿namespace Sundew.Xaml.Optimizations.TestData
+﻿namespace Sundew.Xaml.Optimizations.TestData;
+
+/// <summary>
+/// Interaction logic for DemoWindow.xaml
+/// </summary>
+public partial class DemoWindow
 {
-    /// <summary>
-    /// Interaction logic for DemoWindow.xaml
-    /// </summary>
-    public partial class DemoWindow
+    public DemoWindow()
     {
-        public DemoWindow()
-        {
-            InitializeComponent();
-            this.DataContext = new DemoViewModel();
-        }
+        InitializeComponent();
+        this.DataContext = new DemoViewModel();
     }
 }

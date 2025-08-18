@@ -1,0 +1,86 @@
+﻿using System;
+
+namespace Sundew.Xaml.Optimizations.TestData.Gallery;
+
+public class Photo
+{ 
+    public int? LargeHeight { get; set; }
+    public int? LargeWidth { get; set; }
+    public string LargeUrl { get; set; }
+    public int? MediumHeight { get; set; }
+    public int? MediumWidth { get; set; }
+    public string MediumUrl { get; set; }
+    public int? Large2048Height { get; set; }
+    public int? Large2048Width { get; set; }
+    public string Large2048Url { get; set; }
+    public int? Large1600Height { get; set; }
+    public int? Large1600Width { get; set; }
+    public string Large1600Url { get; set; }
+    public int? Medium800Height { get; set; }
+    public int? Medium800Width { get; set; }
+    public string Medium800Url { get; set; }
+    public int? Medium640Height { get; set; }
+    public int? Medium640Width { get; set; }
+    public string OriginalUrl { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public string PlaceId { get; set; }
+    public int? CountComments { get; set; }
+    public int? CountFaves { get; set; }
+    public int? Rotation { get; set; }
+    public string Description { get; set; }
+    public string MediaStatus { get; set; }
+    public string PathAlias { get; set; }
+    public string Media { get; set; }
+    public string Medium640Url { get; set; }
+    public int? Views { get; set; }
+    public bool? CanBlog { get; set; }
+    public bool? CanAddMeta { get; set; }
+    public bool? CanDownload { get; set; }
+    public bool? CanPrint { get; set; }
+    public bool? CanComment { get; set; }
+    public string WoeId { get; set; }
+    public bool? CanShare { get; set; }
+    public bool DoesLargeExist { get; set; }
+    public int? Small320Height { get; set; }
+    public string Small320Url { get; set; }
+    public bool DateTakenUnknown { get; set; }
+    public DateTime DateTaken { get; set; }
+    public DateTime LastUpdated { get; set; }
+    public DateTime DateUploaded { get; set; }
+    public int OriginalHeight { get; set; }
+    public int OriginalWidth { get; set; }
+    public string License { get; set; }
+    public bool IsFamily { get; set; }
+    public bool IsFriend { get; set; }
+    public bool IsPublic { get; set; }
+    public string Title { get; set; }
+    public string Farm { get; set; }
+    public string Server { get; set; }
+    public string Secret { get; set; }
+    public string UserId { get; set; }
+    public string PhotoId { get; set; }
+    public DateTime? DateAddedToGroup { get; set; }
+    public int? Small320Width { get; set; }
+    public DateTime? DateFavorited { get; set; }
+    public string IconServer { get; set; }
+    public int? SmallHeight { get; set; }
+    public int? SmallWidth { get; set; }
+    public string SmallUrl { get; set; }
+    public int? ThumbnailHeight { get; set; }
+    public int? ThumbnailWidth { get; set; }
+    public string ThumbnailUrl { get; set; }
+    public int? LargeSquareThumbnailHeight { get; set; }
+    public string OwnerName { get; set; }
+    public int? LargeSquareThumbnailWidth { get; set; }
+    public int? SquareThumbnailHeight { get; set; }
+    public int? SquareThumbnailWidth { get; set; }
+    public string SquareThumbnailUrl { get; set; }
+    public string WebUrl { get; set; }
+    public string MachineTags { get; set; }
+    public string OriginalSecret { get; set; }
+    public string OriginalFormat { get; set; }
+    public string IconFarm { get; set; }
+    public string LargeSquareThumbnailUrl { get; set; }
+    public bool DoesMediumExist { get; set; }
+}

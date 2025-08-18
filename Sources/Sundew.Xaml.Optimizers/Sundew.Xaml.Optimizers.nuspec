@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Sundew.Xaml.Optimizers</id>
+    <version>1.0.0</version>
+    <title></title>
+    <authors>$authors$</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>$releaseNotes$</releaseNotes>
+    <license type="expression">$licenseExpression$</license>
+    <copyright>$copyright$</copyright>
+    <repository type="$repositoryType$" url="$repositoryUrl$"></repository>
+    <projectUrl>$repositoryUrl$</projectUrl>
+    <language>en-US</language>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1" />
+      <group targetFramework=".net9.0-windows10.0.19041" />
+    </dependencies>
+  </metadata>
+  <files>
+	<file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net9.0-windows\*.dll" target="lib\net9.0-windows10.0.19041" />
+    <file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net461\*.dll" target="lib\net461" />
+    <file src="$packageFiles$\**\*.*" target=""/>
+  </files>
+</package>

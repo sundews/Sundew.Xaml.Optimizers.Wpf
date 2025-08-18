@@ -1,0 +1,9 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sxo="clr-namespace:Sundew.Xaml.Optimizations;assembly=Sundew.Xaml.Optimizations.Wpf">
+    <ResourceDictionary.MergedDictionaries>
+        <sxo:ResourceDictionary/>
+    </ResourceDictionary.MergedDictionaries>
+    <SolidColorBrush x:Key="Brush" Color="Blue"/>
+</ResourceDictionary>

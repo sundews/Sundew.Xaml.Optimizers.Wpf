@@ -1,14 +1,47 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Sundew.Xaml.Optimizations.TestData</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Gallery\photos.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Gallery\photos.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FlickrNet" Version="3.26.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Sundew.Xaml.Wpf\Sundew.Xaml.Wpf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Gallery\CompiledAndPhasedGalleryControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Gallery\CompiledGalleryControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Gallery\CompiledAndPhasedGalleryControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Gallery\CompiledGalleryControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>
