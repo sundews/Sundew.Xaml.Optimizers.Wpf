@@ -22,8 +22,10 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
     private const char SpaceCharacter = ' ';
     private static readonly XNamespace PresentationOptionsNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation/options";
     private static readonly XName FreezeName = PresentationOptionsNamespace + "Freeze";
+    private readonly XName keyName;
     private readonly XamlPlatformInfo xamlPlatformInfo;
     private readonly HashSet<XName> includedTypes;
+    private readonly string? unfreezeMarker;
 
     /// <summary>Initializes a new instance of the <see cref="FreezeResourceOptimizer"/> class.</summary>
     /// <param name="xamlPlatformInfo">The xaml platform information.</param>
@@ -55,6 +57,9 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
 
             this.includedTypes.Remove(xName);
         }
+
+        this.keyName = this.xamlPlatformInfo.XamlNamespace + "Key";
+        this.unfreezeMarker = freezeResourceSettings.UnfreezeMarker;
     }
 
     /// <summary>Gets the supported platforms.</summary>
@@ -73,13 +78,13 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
         {
             if (rootElement.Name == this.xamlPlatformInfo.SystemResourceDictionaryName)
             {
-                this.TryOptimize(rootElement, xDocument, ref hasBeenOptimized);
+                this.TryOptimize(rootElement, rootElement, ref hasBeenOptimized);
 
                 foreach (var resourcesElement in rootElement
                              .Descendants()
                              .Where(x => x.Name.LocalName.EndsWith(Constants.ResourcesName)))
                 {
-                    this.TryOptimize(resourcesElement, xDocument, ref hasBeenOptimized);
+                    this.TryOptimize(resourcesElement, rootElement, ref hasBeenOptimized);
                 }
             }
 
@@ -99,34 +104,34 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
                     elementToOptimize = firstElement;
                 }
 
-                this.TryOptimize(elementToOptimize, xDocument, ref hasBeenOptimized);
+                this.TryOptimize(elementToOptimize, rootElement, ref hasBeenOptimized);
             }
         }
 
         return OptimizationResult.From(hasBeenOptimized, xDocument);
     }
 
-    private void TryOptimize(XElement elementToOptimize, XDocument xDocument, ref bool hasBeenOptimized)
+    private void TryOptimize(XElement elementToOptimize, XElement rootElement, ref bool hasBeenOptimized)
     {
         var hasAddedNamespaces = false;
         foreach (var element in elementToOptimize.Elements()
                      .Where(x => this.includedTypes.Contains(x.Name)
-                                 && x.Attributes().FirstOrDefault(xAttribute => xAttribute.Name == FreezeName) == null))
+                                 && this.AllowsFreezing(x)))
         {
             if (!hasAddedNamespaces)
             {
-                var poAttribute = xDocument.Root.EnsureXmlNamespaceAttribute(
+                var poAttribute = rootElement.EnsureXmlNamespaceAttribute(
                     PresentationOptionsNamespace,
                     PoPrefix,
                     this.xamlPlatformInfo.XamlNamespace,
                     this.xamlPlatformInfo.DesignerNamespace);
 
-                xDocument.Root.EnsureXmlNamespaceAttribute(
+                rootElement.EnsureXmlNamespaceAttribute(
                     this.xamlPlatformInfo.MarkupCompatibilityNamespace,
                     this.xamlPlatformInfo.MarkupCompatibilityPrefix,
                     PresentationOptionsNamespace);
 
-                var ignorableAttribute = xDocument.Root.Attribute(this.xamlPlatformInfo.IgnorableName);
+                var ignorableAttribute = rootElement.Attribute(this.xamlPlatformInfo.IgnorableName);
                 if (ignorableAttribute != null)
                 {
                     if (!ignorableAttribute.Value.Split(SpaceCharacter).Contains(PoPrefix))
@@ -136,7 +141,7 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
                 }
                 else
                 {
-                    xDocument.Root.Add(new XAttribute(this.xamlPlatformInfo.IgnorableName, poAttribute.Name.LocalName));
+                    rootElement.Add(new XAttribute(this.xamlPlatformInfo.IgnorableName, poAttribute.Name.LocalName));
                 }
 
                 hasAddedNamespaces = true;
@@ -145,6 +150,21 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
             element.Add(new XAttribute(FreezeName, True));
             hasBeenOptimized = true;
         }
+    }
+
+    private bool AllowsFreezing(XElement xElement)
+    {
+        if (xElement.Attributes().FirstOrDefault(xAttribute => xAttribute.Name == FreezeName) != null)
+        {
+            return false;
+        }
+
+        if (this.unfreezeMarker == null)
+        {
+            return true;
+        }
+
+        return !xElement.Attribute(this.keyName)?.Value.Contains(this.unfreezeMarker) ?? false;
     }
 
     private HashSet<XName> GetDefaultIncludedTypes(params string[] types)

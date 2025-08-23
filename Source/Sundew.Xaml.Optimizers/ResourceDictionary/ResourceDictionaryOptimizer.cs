@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ResourceDictionaryCachingOptimizer.cs" company="Sundews">
+// <copyright file="ResourceDictionaryOptimizer.cs" company="Sundews">
 // Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Sundew.Base;
 using Sundew.Xaml.Optimization;
 using Sundew.Xaml.Optimization.Xml;
 using Sundew.Xaml.Optimizers.ResourceDictionary.Internal;
@@ -18,23 +19,28 @@ using Sundew.Xaml.Optimizers.ResourceDictionary.Internal;
 /// <summary>
 /// Optimizes resource dictionaries using an <see cref="XDocument"/>.
 /// </summary>
-public class ResourceDictionaryCachingOptimizer : IXamlOptimizer
+public class ResourceDictionaryOptimizer : IXamlOptimizer
 {
-    private static readonly XNamespace SundewXamlOptimizationWpfNamespace = XNamespace.Get("clr-namespace:Sundew.Xaml.Optimizations;assembly=Sundew.Xaml.Wpf");
+    private static readonly XamlType FallbackReplacementType = new XamlType(Constants.SxPrefix, Constants.SundewXamlOptimizationWpfNamespace, Constants.ResourceDictionaryName);
     private readonly XamlPlatformInfo xamlPlatformInfo;
-    private readonly XName sundewXamlResourceDictionaryName;
+    private readonly ResourceDictionarySettings resourceDictionarySettings;
+    private readonly XamlType defaultReplacementType;
+    private readonly bool defaultReplaceUncategorized;
 
-    /// <summary>Initializes a new instance of the <see cref="ResourceDictionaryCachingOptimizer"/> class.</summary>
+    /// <summary>Initializes a new instance of the <see cref="ResourceDictionaryOptimizer"/> class.</summary>
     /// <param name="xamlPlatformInfo">The framework XML definitions.</param>
-    public ResourceDictionaryCachingOptimizer(XamlPlatformInfo xamlPlatformInfo)
+    /// <param name="resourceDictionarySettings">The resource dictionary caching settings.</param>
+    public ResourceDictionaryOptimizer(XamlPlatformInfo xamlPlatformInfo, ResourceDictionarySettings resourceDictionarySettings)
     {
         this.xamlPlatformInfo = xamlPlatformInfo;
-        this.sundewXamlResourceDictionaryName = SundewXamlOptimizationWpfNamespace + Constants.ResourceDictionaryName;
+        this.resourceDictionarySettings = resourceDictionarySettings;
+        this.defaultReplacementType = resourceDictionarySettings.DefaultReplacementType != null ? XamlType.TryParse(resourceDictionarySettings.DefaultReplacementType) ?? FallbackReplacementType : FallbackReplacementType;
+        this.defaultReplaceUncategorized = this.resourceDictionarySettings.ReplaceUncategorized ?? this.xamlPlatformInfo.XamlPlatform == XamlPlatform.WPF;
     }
 
     /// <summary>Gets the supported platforms.</summary>
     /// <value>The supported platforms.</value>
-    public IReadOnlyList<XamlPlatform> SupportedPlatforms { get; } = new List<XamlPlatform> { XamlPlatform.WPF };
+    public IReadOnlyList<XamlPlatform> SupportedPlatforms => [XamlPlatform.WPF, XamlPlatform.WinUI, XamlPlatform.Avalonia, XamlPlatform.Maui, XamlPlatform.UWP, XamlPlatform.XF];
 
     /// <summary>Optimizes the xml document.</summary>
     /// <param name="xDocument">The xml document.</param>
@@ -47,26 +53,40 @@ public class ResourceDictionaryCachingOptimizer : IXamlOptimizer
             this.xamlPlatformInfo.XmlNamespaceResolver);
         var hasBeenOptimized = false;
         var hasSxoNamespace = false;
+        if (!xDocument.Root.HasValue())
+        {
+            return OptimizationResult.None();
+        }
+
         foreach (var xElement in mergedResourceDictionaries.ToList())
         {
             var optimization = OptimizationProvider.GetOptimizationInfo(
                 xElement,
+                this.defaultReplacementType,
+                this.defaultReplaceUncategorized,
+                this.resourceDictionarySettings.OptimizationMappings,
                 this.xamlPlatformInfo.SystemResourceDictionaryName);
-            switch (optimization.OptimizationMode)
+            switch (optimization.OptimizationAction)
             {
-                case OptimizationMode.Shared:
+                case OptimizationAction.None:
+                    break;
+                case OptimizationAction.Remove:
+                    xElement.ReplaceWith(new XComment(@$"<{xElement.Name.LocalName} Source=""{optimization.Source}""/> was commented out by ResourceDictionaryOptimizer"));
+                    hasBeenOptimized = true;
+                    break;
+                case OptimizationAction.Replace:
                     if (!hasSxoNamespace)
                     {
                         xDocument.Root.EnsureXmlNamespaceAttribute(
-                            SundewXamlOptimizationWpfNamespace,
-                            Constants.SxoPrefix,
+                            optimization.ReplacementType.Namespace,
+                            optimization.ReplacementType.Prefix,
                             this.xamlPlatformInfo.DefaultInsertAfterNamespaces);
                         hasSxoNamespace = true;
                     }
 
                     hasBeenOptimized = true;
                     xElement.ReplaceWith(new XElement(
-                        this.sundewXamlResourceDictionaryName,
+                        optimization.ReplacementType.Namespace + optimization.ReplacementType.Name,
                         new XAttribute(Constants.SourceText, optimization.Source)));
                     break;
             }

@@ -1,24 +1,29 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OptimizationMode.cs" company="Sundews">
+// <copyright file="OptimizationAction.cs" company="Sundews">
 // Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Xaml.Optimizers.ResourceDictionary.Internal;
+namespace Sundew.Xaml.Optimizers.ResourceDictionary;
 
 /// <summary>
-/// Determines how resource dictionaries should be optimized.
+/// Represents the optimization mode for resource dictionary caching.
 /// </summary>
-internal enum OptimizationMode
+public enum OptimizationAction
 {
     /// <summary>
-    /// Indicates no optimization should be applied.
+    /// No optimization is done.
     /// </summary>
     None,
 
     /// <summary>
-    /// Indicates that shared resource dictionary optimization should be applied.
+    /// The optimization is to remove the dictionary.
     /// </summary>
-    Shared,
+    Remove,
+
+    /// <summary>
+    /// The optimization is to replace the dictionary.
+    /// </summary>
+    Replace,
 }

@@ -22,10 +22,10 @@
     </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Publish;Release-Publish;Release-Stable</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+  <!--<PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>    
-  </PropertyGroup>
+  </PropertyGroup>-->
   <ItemGroup>
     <EmbeddedFiles Include="$(GeneratedAssemblyInfoFile)"/>
     <None Include="..\..\README.md" Pack="true" PackagePath="\docs"/>

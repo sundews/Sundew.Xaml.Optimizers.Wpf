@@ -136,14 +136,14 @@ public class ResourceDictionaryTests : IDisposable
     private static Uri GetTesteeUri()
     {
         return new Uri(
-            "/Sundew.Xaml.UnitTests;component/SampleResourceDictionary.xaml",
+            "/Sundew.Xaml.Optimizers.Tests;component/SampleResourceDictionary.xaml",
             UriKind.Relative);
     }
 
     private static Uri GetSecondUri()
     {
         return new Uri(
-            "/Sundew.Xaml.UnitTests;component/SampleResourceDictionary2.xaml",
+            "/Sundew.Xaml.Optimizers.Tests;component/SampleResourceDictionary2.xaml",
             UriKind.Relative);
     }
 }

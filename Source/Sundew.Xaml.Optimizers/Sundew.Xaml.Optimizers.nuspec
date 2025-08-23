@@ -25,4 +25,5 @@
 	<file src="..\..\README.md" target="docs"/>
 	<file src="$packageFiles$\**\*.*" target=""/>
   </files>
+
 </package> 

@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using SystemResourceDictionary = System.Windows.ResourceDictionary;
 
 /// <summary>
@@ -20,6 +21,12 @@ using SystemResourceDictionary = System.Windows.ResourceDictionary;
 /// <seealso cref="SystemResourceDictionary" />
 public sealed class ResourceDictionary : SystemResourceDictionary
 {
+    /// <summary>
+    /// Identifies the Category dependency property.
+    /// </summary>
+    public static readonly DependencyProperty CategoryProperty = DependencyProperty.RegisterAttached(
+        "Category", typeof(string), typeof(ResourceDictionary), new PropertyMetadata(default(string)));
+
     private static readonly object LockObject = new object();
     private static readonly ConcurrentDictionary<Uri, Entry> ResourceDictionaries = new ConcurrentDictionary<Uri, Entry>();
     private Entry? entry;
@@ -119,6 +126,26 @@ public sealed class ResourceDictionary : SystemResourceDictionary
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Sets the category for the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="value">The value.</param>
+    public static void SetCategory(DependencyObject element, string? value)
+    {
+        element.SetValue(CategoryProperty, value);
+    }
+
+    /// <summary>
+    /// Gets the category for the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <returns>The category.</returns>
+    public static string? GetCategory(DependencyObject element)
+    {
+        return (string?)element.GetValue(CategoryProperty);
     }
 
     private class Entry

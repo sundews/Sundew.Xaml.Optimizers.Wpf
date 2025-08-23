@@ -15,11 +15,13 @@ internal sealed class OptimizationInfo
     /// <summary>
     /// Initializes a new instance of the <see cref="OptimizationInfo"/> class.
     /// </summary>
-    /// <param name="optimizationMode">The optimization mode.</param>
+    /// <param name="optimizationAction">The optimization action.</param>
+    /// <param name="replacementType">The replacement type.</param>
     /// <param name="source">The binding.</param>
-    public OptimizationInfo(OptimizationMode optimizationMode, string? source)
+    public OptimizationInfo(OptimizationAction optimizationAction, XamlType replacementType, string source)
     {
-        this.OptimizationMode = optimizationMode;
+        this.OptimizationAction = optimizationAction;
+        this.ReplacementType = replacementType;
         this.Source = source;
     }
 
@@ -29,7 +31,12 @@ internal sealed class OptimizationInfo
     /// <value>
     /// The optimization mode.
     /// </value>
-    public OptimizationMode OptimizationMode { get; }
+    public OptimizationAction OptimizationAction { get; }
+
+    /// <summary>
+    /// Gets the replacement type.
+    /// </summary>
+    public XamlType ReplacementType { get; }
 
     /// <summary>
     /// Gets the binding.
@@ -37,5 +44,5 @@ internal sealed class OptimizationInfo
     /// <value>
     /// The binding.
     /// </value>
-    public string? Source { get; }
+    public string Source { get; }
 }

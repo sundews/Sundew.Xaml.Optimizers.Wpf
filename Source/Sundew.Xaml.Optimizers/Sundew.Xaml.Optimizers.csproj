@@ -15,7 +15,7 @@
     <OutputPath>bin\$(Configuration)</OutputPath>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputType>Library</OutputType>
-	  <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+	  <DocumentationFile>$(OutputPath)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -34,13 +34,14 @@
     <None Remove="Bindings\**" />
   </ItemGroup>
 
+
   <ItemGroup>
 
 		<PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.43">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4-beta1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -54,7 +55,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250818-004537-ci" />
+    <PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250822-222054-ci" />
     <PackageReference Include="System.IO.Abstractions" Version="22.0.15" />
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +72,12 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
 			<OutputFiles Include="$(OutputPath)\$(AssemblyName).m.dll;$(OutputPath)**\System*.dll;$(OutputPath)Sundew.Xaml.Optimization.dll" />
+      <BuildFiles Include="$(MSBuildProjectDirectory)\build\**\*.*" />
+      <ContentFiles Include="$(MSBuildProjectDirectory)\content\**\*.*" />
     </ItemGroup>
 		<Copy SourceFiles="@(OutputFiles)" DestinationFiles="@(OutputFiles->'$(IntermediateOutputPath)\package\tools\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="False" />
+    <Copy SourceFiles="@(BuildFiles)" DestinationFiles="@(BuildFiles->'$(IntermediateOutputPath)\package\build\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="False" />
+    <Copy SourceFiles="@(ContentFiles)" DestinationFiles="@(ContentFiles->'$(IntermediateOutputPath)\package\content\%(RecursiveDir)%(Filename)%(Extension)')" ContinueOnError="False" />
   </Target>
   
 </Project>

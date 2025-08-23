@@ -7,6 +7,8 @@
 
 namespace Sundew.Xaml.Optimizers.ResourceDictionary.Internal;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 /// <summary>
@@ -18,12 +20,18 @@ internal sealed class OptimizationProvider
     /// Gets the optimization information.
     /// </summary>
     /// <param name="resourceDictionaryElement">The resource dictionary element.</param>
+    /// <param name="defaultReplacementType">The default replacement type.</param>
+    /// <param name="replaceUncategorized">The replace uncategorized.</param>
+    /// <param name="optimizationMappings">The optimization mappings.</param>
     /// <param name="frameworkResourceDictionaryName">Name of the framework resource dictionary.</param>
     /// <returns>
     /// The optimization info.
     /// </returns>
     public static OptimizationInfo GetOptimizationInfo(
         XElement resourceDictionaryElement,
+        XamlType defaultReplacementType,
+        bool replaceUncategorized,
+        IReadOnlyList<OptimizationMapping> optimizationMappings,
         XName frameworkResourceDictionaryName)
     {
         if (resourceDictionaryElement.Name == frameworkResourceDictionaryName)
@@ -31,24 +39,35 @@ internal sealed class OptimizationProvider
             var sourceAttribute = resourceDictionaryElement.Attribute(Constants.SourceText);
             if (sourceAttribute == null)
             {
-                return new OptimizationInfo(OptimizationMode.TVoid, null);
+                return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty);
             }
 
-            var match = Constants.UriRegex.Match(sourceAttribute.Value);
-            if (!match.Success)
+            var categoryAttribute = resourceDictionaryElement.Attribute(Constants.SundewXamlOptimizationCategoryName);
+            if (categoryAttribute == null)
             {
-                return new OptimizationInfo(OptimizationMode.TVoid, null);
+                if (replaceUncategorized)
+                {
+                    return new OptimizationInfo(OptimizationAction.Replace, defaultReplacementType, sourceAttribute.Value);
+                }
+
+                return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, sourceAttribute.Value);
             }
 
-            var unsharedWpfGroup = match.Groups[Constants.UnsharedWpfText];
-            if (unsharedWpfGroup.Success)
+            var optimizationMapping = optimizationMappings.FirstOrDefault(x => x.Category == categoryAttribute.Value);
+            if (optimizationMapping != null)
             {
-                return new OptimizationInfo(OptimizationMode.TVoid, null);
+                return optimizationMapping.Action switch
+                {
+                    OptimizationAction.None => new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty),
+                    OptimizationAction.Remove => new OptimizationInfo(OptimizationAction.Remove, defaultReplacementType, sourceAttribute.Value),
+                    OptimizationAction.Replace => new OptimizationInfo(OptimizationAction.Replace, XamlType.TryParse(optimizationMapping.XamlType) ?? defaultReplacementType, sourceAttribute.Value),
+                    _ => new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty),
+                };
             }
 
-            return new OptimizationInfo(OptimizationMode.Shared, match.Value);
+            return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, sourceAttribute.Value);
         }
 
-        return new OptimizationInfo(OptimizationMode.TVoid, null);
+        return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty);
     }
 }

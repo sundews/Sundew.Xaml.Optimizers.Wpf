@@ -18,9 +18,11 @@ public class FreezeResourceSettings
     /// <param name="includeFrameworkTypes">if set to <c>true</c> [include framework types].</param>
     /// <param name="includedTypes">The included types.</param>
     /// <param name="excludedTypes">The excluded types.</param>
-    public FreezeResourceSettings(bool includeFrameworkTypes = true, IReadOnlyList<string>? includedTypes = null, IReadOnlyList<string>? excludedTypes = null)
+    /// <param name="unfreezeMarker">The unfreeze marker.</param>
+    public FreezeResourceSettings(bool includeFrameworkTypes = true, IReadOnlyList<string>? includedTypes = null, IReadOnlyList<string>? excludedTypes = null, string? unfreezeMarker = null)
     {
         this.IncludeFrameworkTypes = includeFrameworkTypes;
+        this.UnfreezeMarker = unfreezeMarker;
         this.IncludedTypes = includedTypes ?? new List<string>();
         this.ExcludedTypes = excludedTypes ?? new List<string>();
     }
@@ -31,6 +33,13 @@ public class FreezeResourceSettings
     [DefaultValue(true)]
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
     public bool IncludeFrameworkTypes { get; }
+
+    /// <summary>
+    /// Gets the unfreeze marker.
+    /// If null the default is to freeze (unfrozen) all resources.
+    /// If set all resource with this marker will not be frozen.
+    /// </summary>
+    public string? UnfreezeMarker { get; }
 
     /// <summary>Gets the included classes.</summary>
     /// <value>The included.</value>
