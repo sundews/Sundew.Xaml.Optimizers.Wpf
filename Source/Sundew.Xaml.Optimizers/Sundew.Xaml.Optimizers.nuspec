@@ -15,13 +15,17 @@
     <language>en-US</language>
 	<readme>docs/README.md</readme>
     <dependencies>
-      <group targetFramework=".NETFramework4.6.1" />
-      <group targetFramework="net9.0-windows10.0.17763.0" />
+      <group targetFramework=".NETFramework4.8" />
+		<group targetFramework="net6.0-windows10.0.17763.0" />
+		<group targetFramework="net8.0-windows10.0.17763.0" />
+		<group targetFramework="net9.0-windows10.0.17763.0" />
     </dependencies>
   </metadata>
   <files>
+	<file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net6.0-windows10.0.17763.0\*.dll" target="lib\net6.0-windows10.0.17763.0" />
+	<file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net8.0-windows10.0.17763.0\*.dll" target="lib\net8.0-windows10.0.17763.0" />
 	<file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net9.0-windows10.0.17763.0\*.dll" target="lib\net9.0-windows10.0.17763.0" />
-    <file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net461\*.dll" target="lib\net461" />
+    <file src="..\Sundew.Xaml.Optimizations.Wpf\bin\$configuration$\net48\*.dll" target="lib\net48" />
 	<file src="..\..\README.md" target="docs"/>
 	<file src="$packageFiles$\**\*.*" target=""/>
   </files>

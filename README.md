@@ -35,4 +35,4 @@ This optimizer replaces StaticResource with DynamicResource, which is useful for
 At build time these get rewritten to DynamicResource to support refreshing at runtime.
 
 Supported settings:
-- DynamicMarker - A string e.g. an emoji charater like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource. 
+- DynamicMarker - A string e.g. an emoji character like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource. 
