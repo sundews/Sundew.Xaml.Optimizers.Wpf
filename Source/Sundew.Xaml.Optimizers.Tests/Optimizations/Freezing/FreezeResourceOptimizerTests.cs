@@ -21,7 +21,7 @@ public class FreezeResourceOptimizerTests
 
     public FreezeResourceOptimizerTests()
     {
-        this.xamlPlatformInfo = new XamlPlatformInfo(XamlPlatform.WPF, Constants.WpfPresentationNamespace, Constants.SundewXamlOptimizationWpfNamespace);
+        this.xamlPlatformInfo = new XamlPlatformInfo(XamlPlatform.WPF, Constants.WpfPresentationNamespace, Constants.WpfXamlNamespace);
     }
 
     [Fact]

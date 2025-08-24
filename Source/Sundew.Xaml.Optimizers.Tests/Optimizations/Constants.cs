@@ -13,4 +13,5 @@ internal class Constants
 {
     public const string SundewXamlOptimizationWpfNamespace = "clr-namespace:Sundew.Xaml.Optimizations;assembly=Sundew.Xaml.Wpf";
     public static readonly XNamespace WpfPresentationNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+    public static readonly XNamespace WpfXamlNamespace = "http://schemas.microsoft.com/winfx/2006/xaml";
 }

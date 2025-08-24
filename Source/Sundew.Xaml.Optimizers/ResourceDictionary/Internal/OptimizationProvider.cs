@@ -42,7 +42,7 @@ internal sealed class OptimizationProvider
                 return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty);
             }
 
-            var categoryAttribute = resourceDictionaryElement.Attribute(Constants.SundewXamlOptimizationCategoryName);
+            var categoryAttribute = resourceDictionaryElement.Attributes().FirstOrDefault(x => x.Name.LocalName.EndsWith(Constants.SundewXamlOptimizationCategoryName.LocalName));
             if (categoryAttribute == null)
             {
                 if (replaceUncategorized)
@@ -56,6 +56,7 @@ internal sealed class OptimizationProvider
             var optimizationMapping = optimizationMappings.FirstOrDefault(x => x.Category == categoryAttribute.Value);
             if (optimizationMapping != null)
             {
+                categoryAttribute.Remove();
                 return optimizationMapping.Action switch
                 {
                     OptimizationAction.None => new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty),

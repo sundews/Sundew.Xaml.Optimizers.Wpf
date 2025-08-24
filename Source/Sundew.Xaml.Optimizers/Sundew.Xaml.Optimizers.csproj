@@ -55,7 +55,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250822-222054-ci" />
+    <PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250823-215006-ci" />
     <PackageReference Include="System.IO.Abstractions" Version="22.0.15" />
   </ItemGroup>
   <ItemGroup>

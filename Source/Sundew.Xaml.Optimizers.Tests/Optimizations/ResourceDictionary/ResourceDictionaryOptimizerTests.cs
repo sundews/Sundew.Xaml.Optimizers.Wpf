@@ -21,7 +21,7 @@ public class ResourceDictionaryOptimizerTests
 
     public ResourceDictionaryOptimizerTests()
     {
-        this.xamlPlatformInfo = new XamlPlatformInfo(XamlPlatform.WPF, Constants.WpfPresentationNamespace, Constants.SundewXamlOptimizationWpfNamespace);
+        this.xamlPlatformInfo = new XamlPlatformInfo(XamlPlatform.WPF, Constants.WpfPresentationNamespace, Constants.WpfXamlNamespace);
     }
 
     [Fact]
@@ -268,7 +268,156 @@ public class ResourceDictionaryOptimizerTests
     <{rootType}.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--<ResourceDictionary Source=""/Sundew.Xaml.Sample.Wpf;component/Controls.xaml""/> was commented out by ResourceDictionaryOptimizer-->
+                <ResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var xDocument = XDocument.Parse(input);
+        var testee = new ResourceDictionaryOptimizer(this.xamlPlatformInfo, new ResourceDictionarySettings([new OptimizationMapping("🎨", OptimizationAction.Remove)], true));
+
+        var result = testee.Optimize(xDocument, Substitute.For<IFileReference>());
+
+        result.XDocument!.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
+    }
+
+    [Theory]
+    [InlineData("Application")]
+    [InlineData("UserControl")]
+    [InlineData("Page")]
+    [InlineData("Window")]
+    public void Optimize_When_ThereIsOneMergedResourceDictionaryMarkedWithRemoveCategoryInDesignNamespace_Then_ResultShouldBeExpectedResult(string rootType)
+    {
+        var input = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    mc:Ignorable=""d""
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source=""/Sundew.Xaml.Sample.Wpf;component/Controls.xaml"" d:ResourceDictionary.Category=""🎨"" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var expectedResult = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    mc:Ignorable=""d"" 
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var xDocument = XDocument.Parse(input);
+        var testee = new ResourceDictionaryOptimizer(this.xamlPlatformInfo, new ResourceDictionarySettings([new OptimizationMapping("🎨", OptimizationAction.Remove)], true));
+
+        var result = testee.Optimize(xDocument, Substitute.For<IFileReference>());
+
+        result.XDocument!.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
+    }
+
+    [Theory]
+    [InlineData("Application")]
+    [InlineData("UserControl")]
+    [InlineData("Page")]
+    [InlineData("Window")]
+    public void Optimize_When_ThereIsOneMergedResourceDictionaryMarkedWithRemoveCategoryInSxDesignNamespace_Then_ResultShouldBeExpectedResult(string rootType)
+    {
+        var input = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    xmlns:sxd=""http://sundew.dev/xaml/design""
+    mc:Ignorable=""d sx""
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source=""/Sundew.Xaml.Sample.Wpf;component/Controls.xaml"" sxd:ResourceDictionary.Category=""🎨"" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var expectedResult = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    xmlns:sxd=""http://sundew.dev/xaml/design""
+    mc:Ignorable=""d sx""
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var xDocument = XDocument.Parse(input);
+        var testee = new ResourceDictionaryOptimizer(this.xamlPlatformInfo, new ResourceDictionarySettings([new OptimizationMapping("🎨", OptimizationAction.Remove)], true));
+
+        var result = testee.Optimize(xDocument, Substitute.For<IFileReference>());
+
+        result.XDocument!.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
+    }
+
+    [Theory]
+    [InlineData("Application")]
+    [InlineData("UserControl")]
+    [InlineData("Page")]
+    [InlineData("Window")]
+    public void Optimize_When_ThereIsOneMergedResourceDictionaryMarkedWithRemoveCategoryWithSxInDesignNamespace_Then_ResultShouldBeExpectedResult(string rootType)
+    {
+        var input = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    mc:Ignorable=""d""
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source=""/Sundew.Xaml.Sample.Wpf;component/Controls.xaml"" d:sx.ResourceDictionary.Category=""🎨"" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var expectedResult = $@"<{rootType} x:Class=""Sundew.Xaml.Optimizer.Sample""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" 
+    xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+    xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+    xmlns:sx=""http://sundew.dev/xaml""
+    mc:Ignorable=""d""
+    StartupUri=""MainWindow.xaml"">
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </{rootType}.Resources>

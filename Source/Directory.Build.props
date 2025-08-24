@@ -9,8 +9,8 @@
     <Company>Sundews</Company>
     <Authors>Kim Hugener-Ohlsen</Authors>
     <Copyright>Kim Hugener-Ohlsen</Copyright>
-    <RepositoryUrl>https://github.com/sundews/Sundew.Xaml.Optimizations</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/sundews/Sundew.Xaml.Optimizations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sundews/Sundew.Xaml.Optimizers</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/sundews/Sundew.Xaml.Optimizers</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>

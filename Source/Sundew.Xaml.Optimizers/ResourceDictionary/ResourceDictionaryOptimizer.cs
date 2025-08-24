@@ -21,6 +21,7 @@ using Sundew.Xaml.Optimizers.ResourceDictionary.Internal;
 /// </summary>
 public class ResourceDictionaryOptimizer : IXamlOptimizer
 {
+    private const string Source = "Source";
     private static readonly XamlType FallbackReplacementType = new XamlType(Constants.SxPrefix, Constants.SundewXamlOptimizationWpfNamespace, Constants.ResourceDictionaryName);
     private readonly XamlPlatformInfo xamlPlatformInfo;
     private readonly ResourceDictionarySettings resourceDictionarySettings;
@@ -71,7 +72,7 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
                 case OptimizationAction.None:
                     break;
                 case OptimizationAction.Remove:
-                    xElement.ReplaceWith(new XComment(@$"<{xElement.Name.LocalName} Source=""{optimization.Source}""/> was commented out by ResourceDictionaryOptimizer"));
+                    xElement.Attribute(Source)?.Remove();
                     hasBeenOptimized = true;
                     break;
                 case OptimizationAction.Replace:
