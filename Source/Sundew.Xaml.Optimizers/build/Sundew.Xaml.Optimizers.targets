@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<_SundewXamlOptimizersMerged>$(MSBuildThisFileDirectory)..\tools\Sundew.Xaml.Optimizers.m.dll</_SundewXamlOptimizersMerged>
+		<_SundewXamlOptimizers Condition="Exists($(_SundewXamlOptimizersMerged))">$(_SundewXamlOptimizersMerged)</_SundewXamlOptimizers>
+		<_SundewXamlOptimizers Condition="'$(_SundewXamlOptimizers)'==''">$(MSBuildThisFileDirectory)..\tools\Sundew.Xaml.Optimizers.dll</_SundewXamlOptimizers>
+	</PropertyGroup>
+	<ItemGroup>
+		<Sxo Include="$(_SundewXamlOptimizers)"/>
+	</ItemGroup>
+
+	<Target Name="CopyPackageFiles" BeforeTargets="OptimizeXamlResources">
+		<ItemGroup>
+			<PackageContentFiles Include="$(MSBuildThisFileDirectory)../content/**/*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(PackageContentFiles)"
+		      DestinationFiles="@(PackageContentFiles->'$(ProjectDir)/sxo/%(RecursiveDir)%(Filename)%(Extension)')" 
+		      Condition="!Exists('@(PackageContentFiles->'$(ProjectDir)/sxo/%(RecursiveDir)%(Filename)%(Extension)')')"
+			  SkipUnchangedFiles="true" />
+	</Target>
+</Project>
