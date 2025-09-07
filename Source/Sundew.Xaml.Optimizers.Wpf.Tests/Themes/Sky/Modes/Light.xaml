@@ -1,0 +1,44 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="GradientStart🔄️">#FFACACAC</Color>
+    <Color x:Key="GradientStop🔄️">White</Color>
+
+    <Color x:Key="AccentSubtleColor🔄️">#FFD7DCFC</Color>
+    <Color x:Key="AccentNeutralColor🔄️">#FF7EA6FC</Color>
+    <Color x:Key="AccentStrikingColor🔄️">#FF2D1AFA</Color>
+    <Color x:Key="BackgroundSubtleColor🔄️">#FF97ADF1</Color>
+    <Color x:Key="BackgroundNeutralColor🔄️">#FF98ADE9</Color>
+    <Color x:Key="BackgroundStrikingColor🔄️">#FFC7CFE8</Color>
+
+    <SolidColorBrush x:Key="AccentSubtleBrush💫🔄️" Color="{StaticResource AccentSubtleColor🔄️}" />
+    <SolidColorBrush x:Key="AccentNeutralBrush💫🔄️" Color="{StaticResource AccentNeutralColor🔄️}" />
+    <SolidColorBrush x:Key="AccentStrikingBrush💫🔄️" Color="{StaticResource AccentStrikingColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundSubtleBrush🔄️" Color="{StaticResource BackgroundSubtleColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundNeutralBrush🔄️" Color="{StaticResource BackgroundNeutralColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundStrikingBrush🔄️" Color="{StaticResource BackgroundStrikingColor🔄️}" />
+
+    <LinearGradientBrush x:Key="WindowBackgroundBrush🔄️" EndPoint="0.5,1" StartPoint="0.5,0">
+        <LinearGradientBrush.RelativeTransform>
+            <TransformGroup>
+                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                <TranslateTransform/>
+            </TransformGroup>
+        </LinearGradientBrush.RelativeTransform>
+        <GradientStop x:Name="Start" Color="{StaticResource BackgroundSubtleColor🔄️}" Offset="0"/>
+        <GradientStop x:Name="Stop" Color="{StaticResource BackgroundNeutralColor🔄️}" Offset="1"/>
+    </LinearGradientBrush>
+
+    <Storyboard x:Key="BackgroundAnimation🔄️" AutoReverse="True" RepeatBehavior="Forever" >
+        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)">
+            <LinearColorKeyFrame KeyTime="0:0:2" Value="{StaticResource AccentSubtleColor🔄️}"/>
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Control.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)">
+            <LinearColorKeyFrame KeyTime="0:0:2" Value="{StaticResource BackgroundStrikingColor🔄️}"/>
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
+
+</ResourceDictionary>

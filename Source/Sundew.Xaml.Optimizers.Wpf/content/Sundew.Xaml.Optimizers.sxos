@@ -1,0 +1,38 @@
+﻿{
+  "IsEnabled": true,
+  "Optimizers": [
+    {
+      "Name": "ResourceDictionaryOptimizer",
+      "IsEnabled": true,
+      "Settings": {
+        "OptimizationMappings": [
+          {
+            "Category": "🎨",
+            "Action": "Remove",
+          },
+          {
+            "Category": "♻️",
+            "Action": "Replace",
+            "ReplacementType": "sx|http://sundew.dev/xaml|ResourceDictionary"
+          }
+        ]
+      }
+    },
+    {
+      "Name": "FreezeResourceOptimizer",
+      "IsEnabled": true,
+      "Settings": {
+        "IncludeFrameworkTypes": true,
+        "UnfreezeMarker": "💫",
+      }
+    },
+    {
+      "Name": "ThemeOptimizer",
+      "IsEnabled": true,
+      "Settings": {
+        "ThemesPath": "Themes",
+        "ThemeModesPath": "\\Modes"
+      }
+    }
+  ]
+}

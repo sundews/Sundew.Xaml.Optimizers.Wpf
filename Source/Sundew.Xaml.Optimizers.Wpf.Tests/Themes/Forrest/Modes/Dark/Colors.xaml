@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="GradientStart🔄️">#FF616161</Color>
+    <Color x:Key="GradientStop🔄️">Black</Color>
+
+    <Color x:Key="AccentSubtleColor🔄️" >#FF1AFA30</Color>
+    <Color x:Key="AccentNeutralColor🔄️" >#FF7EFC98</Color>
+    <Color x:Key="AccentStrikingColor🔄️" >#FFD7FCDB</Color>
+    <Color x:Key="BackgroundSubtleColor🔄️" >#FF058411</Color>
+    <Color x:Key="BackgroundNeutralColor🔄️">#FF0B8312</Color>
+    <Color x:Key="BackgroundStrikingColor🔄️" >#FF14861F</Color>
+
+    <SolidColorBrush x:Key="AccentSubtleBrush💫🔄️" Color="{StaticResource AccentSubtleColor🔄️}" />
+    <SolidColorBrush x:Key="AccentNeutralBrush💫🔄️" Color="{StaticResource AccentNeutralColor🔄️}" />
+    <SolidColorBrush x:Key="AccentStrikingBrush💫🔄️" Color="{StaticResource AccentStrikingColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundSubtleBrush🔄️" Color="{StaticResource BackgroundSubtleColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundNeutralBrush🔄️" Color="{StaticResource BackgroundNeutralColor🔄️}" />
+    <SolidColorBrush x:Key="BackgroundStrikingBrush🔄️" Color="{StaticResource BackgroundStrikingColor🔄️}" />
+
+</ResourceDictionary>

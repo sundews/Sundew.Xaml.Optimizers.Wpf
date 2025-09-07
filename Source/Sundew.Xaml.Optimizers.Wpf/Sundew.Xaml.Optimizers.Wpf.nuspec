@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Sundew.Xaml.Optimizers.Wpf</id>
+    <version>1.0.0</version>
+    <title></title>
+    <authors>$authors$</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>$releaseNotes$</releaseNotes>
+    <license type="expression">$licenseExpression$</license>
+    <copyright>$copyright$</copyright>
+    <repository type="$repositoryType$" url="$repositoryUrl$"></repository>
+    <projectUrl>$repositoryUrl$</projectUrl>
+    <language>en-US</language>
+	<readme>docs/README.md</readme>
+	<dependencies>
+	  <group targetFramework=".NETFramework4.8" >
+		<dependency id="Sundew.Xaml.Optimizations.Wpf" version="$version$" exclude="Build,Analyzers" />
+	  </group>
+	  <group targetFramework="net6.0-windows7.0" >
+		<dependency id="Sundew.Xaml.Optimizations.Wpf" version="$version$" exclude="Build,Analyzers" />
+	  </group>
+	  <group targetFramework="net8.0-windows7.0" >
+		<dependency id="Sundew.Xaml.Optimizations.Wpf" version="$version$" exclude="Build,Analyzers" />
+	  </group>
+	  <group targetFramework="net9.0-windows7.0" >
+		<dependency id="Sundew.Xaml.Optimizations.Wpf" version="$version$" exclude="Build,Analyzers" />
+	  </group>
+	</dependencies>
+  </metadata>
+  <files>
+	<file src="..\..\README.md" target="docs"/>
+	<file src="$packageFiles$\**\*.*" target=""/>
+  </files>
+
+</package> 

@@ -35,4 +35,15 @@ This optimizer replaces StaticResource with DynamicResource, which is useful for
 At build time these get rewritten to DynamicResource to support refreshing at runtime.
 
 Supported settings:
-- DynamicMarker - A string e.g. an emoji character like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource. 
+- DynamicMarker - A string e.g. an emoji character like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource, unless the resource is declared in the same file. 
+
+### ThemeOptimizer
+
+This optimizer enables theme support by merging ResourceDictionaries based on a theme and theme mode.
+It supports ResourceDictionary reuse for theme modes for resource dictionaries places in the Modes folder which are not ThemeModes. These will be copied for each theme mode during optimization.
+
+Themes can be exchanged at runtime by the ThemeManager found in [Sundew.Xaml.Theming.Wpf](https://www.nuget.org/packages/Sundew.Xaml.Theming.Wpf).
+
+Supported settings:
+- ThemesPath - The path relative to the project file where theme ResourceDictionaries are located. Default is "Themes".
+- ThemeModesPath - The path relative to the ThemesPath where theme mode ResourceDictionaries are located. Default is "Modes".

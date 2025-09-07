@@ -1,0 +1,41 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sx="http://sundew.dev/xaml"
+    xmlns:sample="clr-namespace:Sundew.Xaml.Optimizer.Sample"
+    xmlns:theming="clr-namespace:Sundew.Xaml.Theming;assembly=Sundew.Xaml.Theming.Wpf"
+    mc:Ignorable="d">
+
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource WindowBackgroundBrush💫🔄️}"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentNeutralBrush💫🔄️}"/>
+        <Setter Property="Template" >
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+                    <sx:Border 
+                        BorderBrush="{StaticResource BackgroundNeutralBrush🔄️}" 
+                        BorderThickness="4"
+                        CornerRadius="10"
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter/>
+                    </sx:Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard Storyboard="{StaticResource BackgroundAnimation🔄️}"/>
+            </EventTrigger>
+
+            <EventTrigger RoutedEvent="theming:ThemeManager.ThemeRefresh">
+                <BeginStoryboard Storyboard="{StaticResource BackgroundAnimation🔄️}"/>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="sample:MainWindow" BasedOn="{StaticResource {x:Type Window}}"/>
+
+</ResourceDictionary>
