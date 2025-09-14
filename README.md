@@ -1,4 +1,4 @@
-﻿# Sundew.Xaml.Optimizers
+﻿# Sundew.Xaml.Optimizers.Wpf
 ## Usage
 Refer to the sample for how to use optimizations: https://github.com/hugener/Sundew.Xaml.Optimizer.Sample
 ## Supported optimizers:
@@ -9,9 +9,9 @@ The ResourceDictionaryCachingOptimizer enables caching for merged ResourceDictio
 3. Less overhead maintaining DesignTimerResources.
 
 Supported settings:
-- DefaultReplacementType - Only used with Replace action, formatted as: "prefix|XamlNamespace|TypeName"
-- ReplaceUncategorized - If true, all uncategorized ResourceDictionaries will be replaced with the built-in caching ResourceDictionary.
-- OptimizationMappings - A list of optimizations to apply, default is empty where all ResourceDictionaries are replaced with the built-in caching ResourceDictionary.
+- **DefaultReplacementType** - Only used with Replace action, formatted as: "prefix|XamlNamespace|TypeName"
+- **ReplaceUncategorized** - If true, all uncategorized ResourceDictionaries will be replaced with the built-in caching ResourceDictionary.
+- **OptimizationMappings** - A list of optimizations to apply, default is empty where all ResourceDictionaries are replaced with the built-in caching ResourceDictionary.
     - Category - The category e.g. an emoji charater like 🎨 (likely to be used with Remove) to indicate a "theme" dictionary or ♻️ to shared (recycled) resources.
     - Action - Remove or Replace (With ReplacementType). 
     - ReplacementType - Only used with Replace action, formatted as: "prefix|XamlNamespace|TypeName"
@@ -24,10 +24,10 @@ Note that brushes that get modified (e.g. animated) at runtime must set po:Freez
 For more information about presentation options see: https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/presentationoptions-freeze-attribute
 
 Supported settings:
-- IncludeFrameworkTypes (true/false), default true => Includes all WPF freezables.
-- UnfreezeMarker - A string e.g. an emoji character like 💫 that can be used to mark resources as unfrozen. Any resource containing this marker in the key will not be frozen.
-- IncludedTypes (List of xaml type names), default null => Additional freezables to be included.
-- ExcludedTypes (List of xaml type names), default null => Freezables to be excluded. 
+- **IncludeFrameworkTypes** (true/false), default true => Includes all WPF freezables.
+- **UnfreezeMarker** - A string e.g. an emoji character like 💫 that can be used to mark resources as unfrozen. Any resource containing this marker in the key will not be frozen.
+- **IncludedTypes** (List of xaml type names), default null => Additional freezables to be included.
+- **ExcludedTypes** (List of xaml type names), default null => Freezables to be excluded. 
 Types in IncludedTypes and ExcludedTypes that does not include a XML namespace will use the WPF presentation namespace.
 
 ### StaticToDynamicResourceOptimizer
@@ -35,7 +35,7 @@ This optimizer replaces StaticResource with DynamicResource, which is useful for
 At build time these get rewritten to DynamicResource to support refreshing at runtime.
 
 Supported settings:
-- DynamicMarker - A string e.g. an emoji character like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource, unless the resource is declared in the same file. 
+- **DynamicMarker** - A string e.g. an emoji character like 🔄 that can be used to mark resources as dynamic. Any StaticResource containing this marker in the key will be replaced with DynamicResource, unless the resource is declared in the same file. 
 
 ### ThemeOptimizer
 
@@ -45,5 +45,5 @@ It supports ResourceDictionary reuse for theme modes for resource dictionaries p
 Themes can be exchanged at runtime by the ThemeManager found in [Sundew.Xaml.Theming.Wpf](https://www.nuget.org/packages/Sundew.Xaml.Theming.Wpf).
 
 Supported settings:
-- ThemesPath - The path relative to the project file where theme ResourceDictionaries are located. Default is "Themes".
-- ThemeModesPath - The path relative to the ThemesPath where theme mode ResourceDictionaries are located. Default is "Modes".
+- **ThemesPath** - The path relative to the project file where theme ResourceDictionaries are located. Default is "Themes".
+- **ThemeModesPath** - The path relative to the ThemesPath where theme mode ResourceDictionaries are located. Default is "Modes".
