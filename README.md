@@ -3,7 +3,7 @@
 Refer to the sample for how to use optimizations: https://github.com/hugener/Sundew.Xaml.Optimizer.Sample
 ## Supported optimizers:
 ### ResourceDictionaryOptimizer
-The ResourceDictionaryCachingOptimizer enables caching for merged ResourceDictionaries and has the following advantages:
+The ResourceDictionaryOptimizer enables caching for merged ResourceDictionaries and has the following advantages:
 1. Merged ResourcesDictionaries are only loaded once.
 2. Tooling and designers will not break, as they see the original WPF ResourceDictionary.
 3. Less overhead maintaining DesignTimerResources.
