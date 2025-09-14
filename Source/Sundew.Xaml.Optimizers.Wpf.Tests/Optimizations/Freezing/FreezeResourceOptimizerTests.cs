@@ -51,9 +51,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""BackgroundBrush"" po:Freeze=""False"" Color=""#111111"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -77,9 +77,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -106,9 +106,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -133,9 +133,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(true), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(true));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -163,9 +163,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -194,9 +194,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -225,9 +225,9 @@ public class FreezeResourceOptimizerTests
     <SolidColorBrush x:Key=""AccentBrush"" Color=""#AAAAAA"" po1:Freeze=""True"" />
     <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po1:Freeze=""True"" />
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -268,9 +268,9 @@ public class FreezeResourceOptimizerTests
         </Grid>
     </DataTemplate>
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -307,9 +307,9 @@ public class FreezeResourceOptimizerTests
         </Grid>
     </DataTemplate>
 </ResourceDictionary>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -341,9 +341,9 @@ public class FreezeResourceOptimizerTests
         <SolidColorBrush x:Key=""AccentBrush2"" Color=""#AAAAAA"" po:Freeze=""True"" />
     </{rootType}.Resources>
 </{rootType}>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -379,9 +379,9 @@ public class FreezeResourceOptimizerTests
         </ResourceDictionary>
     </{rootType}.Resources>
 </{rootType}>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -420,9 +420,9 @@ public class FreezeResourceOptimizerTests
         </Grid.Resources>
     </Grid>
 </{rootType}>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -457,9 +457,9 @@ public class FreezeResourceOptimizerTests
         </Grid.Resources>
     </Grid>
 </{rootType}>";
-        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }

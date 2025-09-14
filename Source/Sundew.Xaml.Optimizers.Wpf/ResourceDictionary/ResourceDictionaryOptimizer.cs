@@ -26,23 +26,13 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
 {
     private const string Source = "Source";
     private static readonly XamlType FallbackReplacementType = new XamlType(Constants.SxPrefix, Constants.SundewXamlOptimizationNamespace, Constants.ResourceDictionaryName);
-    private readonly XamlPlatformInfo xamlPlatformInfo;
     private readonly ResourceDictionarySettings resourceDictionarySettings;
-    private readonly ProjectInfo projectInfo;
-    private readonly XamlType defaultReplacementType;
-    private readonly bool defaultReplaceUncategorized;
 
     /// <summary>Initializes a new instance of the <see cref="ResourceDictionaryOptimizer"/> class.</summary>
-    /// <param name="xamlPlatformInfo">The framework XML definitions.</param>
     /// <param name="resourceDictionarySettings">The resource dictionary caching settings.</param>
-    /// <param name="projectInfo">The project info.</param>
-    public ResourceDictionaryOptimizer(ResourceDictionarySettings resourceDictionarySettings, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public ResourceDictionaryOptimizer(ResourceDictionarySettings resourceDictionarySettings)
     {
-        this.xamlPlatformInfo = xamlPlatformInfo;
         this.resourceDictionarySettings = resourceDictionarySettings;
-        this.projectInfo = projectInfo;
-        this.defaultReplacementType = resourceDictionarySettings.DefaultReplacementType != null ? XamlType.TryParse(resourceDictionarySettings.DefaultReplacementType) ?? FallbackReplacementType : FallbackReplacementType;
-        this.defaultReplaceUncategorized = this.resourceDictionarySettings.ReplaceUncategorized ?? this.xamlPlatformInfo.XamlPlatform == XamlPlatform.WPF;
     }
 
     /// <summary>Gets the supported platforms.</summary>
@@ -51,17 +41,22 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
 
     /// <summary>Optimizes the xml document.</summary>
     /// <param name="xamlFiles">The xaml file.</param>
+    /// <param name="xamlPlatformInfo">The xaml platform info.</param>
+    /// <param name="projectInfo">The project info.</param>
     /// <returns>A result with the optimized <see cref="XDocument"/>, if successful.</returns>
-    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles)
+    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
+        var defaultReplacementType = this.resourceDictionarySettings.DefaultReplacementType != null ? XamlType.TryParse(this.resourceDictionarySettings.DefaultReplacementType) ?? FallbackReplacementType : FallbackReplacementType;
+        var defaultReplaceUncategorized = this.resourceDictionarySettings.ReplaceUncategorized ?? xamlPlatformInfo.XamlPlatform == XamlPlatform.WPF;
+
         var xamlFilesChanges = new ConcurrentBag<XamlFileChange>();
         await xamlFiles.ParallelForEachAsync(
-            new ParallelOptions { MaxDegreeOfParallelism = this.projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
+            new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
             (xamlFile, token) =>
         {
             var mergedResourceDictionaries = xamlFile.Document.XPathSelectElements(
                 Constants.DefaultResourceDictionaryMergedDictionariesDefaultResourceDictionaryXPath,
-                this.xamlPlatformInfo.XmlNamespaceResolver);
+                xamlPlatformInfo.XmlNamespaceResolver);
             var hasBeenOptimized = false;
             var hasSxoNamespace = false;
             if (!xamlFile.Document.Root.HasValue())
@@ -73,10 +68,10 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
             {
                 var optimization = OptimizationProvider.GetOptimizationInfo(
                     xElement,
-                    this.defaultReplacementType,
-                    this.defaultReplaceUncategorized,
+                    defaultReplacementType,
+                    defaultReplaceUncategorized,
                     this.resourceDictionarySettings.OptimizationMappings,
-                    this.xamlPlatformInfo.SystemResourceDictionaryName);
+                    xamlPlatformInfo.SystemResourceDictionaryName);
                 switch (optimization.OptimizationAction)
                 {
                     case OptimizationAction.None:
@@ -91,7 +86,7 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
                             xamlFile.Document.Root.EnsureXmlNamespaceAttribute(
                                 optimization.ReplacementType.Namespace,
                                 optimization.ReplacementType.Prefix,
-                                this.xamlPlatformInfo.DefaultInsertAfterNamespaces);
+                                xamlPlatformInfo.DefaultInsertAfterNamespaces);
                             hasSxoNamespace = true;
                         }
 

@@ -23,23 +23,15 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
 {
     private const string StaticResourcePrefix = "{StaticResource ";
 
-    private readonly XamlPlatformInfo xamlPlatformInfo;
-    private readonly ProjectInfo projectInfo;
     private readonly StaticToDynamicResourceSettings staticToDynamicResourceSettings;
-    private readonly XName keyName;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StaticToDynamicResourceOptimizer"/> class with the specified settings.
     /// </summary>
-    /// <param name="xamlPlatformInfo">The xaml platform info.</param>
-    /// <param name="projectInfo">The project info.</param>
     /// <param name="staticToDynamicResourceSettings">The static to dynamic resource settings.</param>
-    public StaticToDynamicResourceOptimizer(StaticToDynamicResourceSettings staticToDynamicResourceSettings, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public StaticToDynamicResourceOptimizer(StaticToDynamicResourceSettings staticToDynamicResourceSettings)
     {
-        this.xamlPlatformInfo = xamlPlatformInfo;
-        this.projectInfo = projectInfo;
         this.staticToDynamicResourceSettings = staticToDynamicResourceSettings;
-        this.keyName = xamlPlatformInfo.XamlNamespace + "Key";
     }
 
     /// <summary>
@@ -51,12 +43,15 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
     /// Optimizes the specified xaml document.
     /// </summary>
     /// <param name="xamlFiles">The xaml file.</param>
+    /// <param name="xamlPlatformInfo">The xaml platform info.</param>
+    /// <param name="projectInfo">The project info.</param>
     /// <returns>The optimization result.</returns>
-    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles)
+    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
+        var keyName = xamlPlatformInfo.XamlNamespace + "Key";
         var xamlFileChanges = new ConcurrentBag<XamlFileChange>();
         await xamlFiles.ParallelForEachAsync(
-            new ParallelOptions { MaxDegreeOfParallelism = this.projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
+            new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
             (xamlFile, token) =>
         {
             if (!xamlFile.Document.Root.HasValue())
@@ -75,7 +70,7 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
                         attribute.Value.AsSpan(StaticResourcePrefix.Length).Contains(
                             this.staticToDynamicResourceSettings.DynamicMarker.AsSpan(),
                             StringComparison.InvariantCulture) &&
-                        !this.IsDefinedIsSameDocument(attribute.Value, xamlFile.Document.Root))
+                        !this.IsDefinedIsSameDocument(attribute.Value, xamlFile.Document.Root, keyName))
                     {
                         attribute.Value = dynamicResource +
                                           attribute.Value.AsSpan(StaticResourcePrefix.Length).ToString();
@@ -112,12 +107,12 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
         }
     }
 
-    private bool IsDefinedIsSameDocument(string attributeValue, XElement rootElement)
+    private bool IsDefinedIsSameDocument(string attributeValue, XElement rootElement, XName keyName)
     {
         var resourceKey = attributeValue.AsSpan(StaticResourcePrefix.Length, attributeValue.Length - StaticResourcePrefix.Length - 1);
         foreach (var element in rootElement.DescendantsAndSelf())
         {
-            var keyAttribute = element.Attribute(this.keyName);
+            var keyAttribute = element.Attribute(keyName);
             if (keyAttribute != null && keyAttribute.Value.AsSpan().Equals(resourceKey, StringComparison.InvariantCulture))
             {
                 return true;

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using AwesomeAssertions;
 using Sundew.Base.Collections;
 using Sundew.Xaml.Optimization;
 using Sundew.Xaml.Optimization.Xml;
@@ -23,11 +24,13 @@ public class ThemeOptimizerTests
         this.projectInfo = ProjectInfoHelper.ForTesting<ThemeOptimizerTests>(false, projectDirectory: new FileInfo(typeof(ThemeOptimizerTests).Assembly.Location).Directory?.FullName ?? string.Empty);
     }
     [Fact]
-    public async Task Test()
+    public async Task OptimizeAsync_Then_ResultShouldBeExpectedResult()
     {
-        var testee = new ThemeOptimizer(new ThemeOptimizerSettings("Themes", "Modes"), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new ThemeOptimizer(new ThemeOptimizerSettings("Themes", "Modes"));
 
-        var result = await testee.OptimizeAsync(await this.GetXamlFiles());
+        var result = await testee.OptimizeAsync(await this.GetXamlFiles(), this.xamlPlatformInfo, this.projectInfo);
+
+        result.IsSuccess.Should().BeTrue();
     }
 
     private async Task<XamlFile[]> GetXamlFiles()

@@ -30,31 +30,25 @@ public class ThemeOptimizer : IXamlOptimizer
     private static readonly XamlType ThemeResourceDictionaryXamlType = new(Constants.SxPrefix, Constants.SundewXamlThemingNamespace, Constants.ThemeResourceDictionaryName);
     private static readonly XamlType ThemeModeResourceDictionaryXamlType = new(Constants.SxPrefix, Constants.SundewXamlThemingNamespace, Constants.ThemeModeResourceDictionaryName);
     private readonly ThemeOptimizerSettings themeOptimizerSettings;
-    private readonly XamlPlatformInfo xamlPlatformInfo;
-    private readonly ProjectInfo projectInfo;
-    private readonly DirectoryInfo themesDirectoryInfo;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeOptimizer"/> class.
     /// </summary>
     /// <param name="themeOptimizerSettings">The theme optimizer settings.</param>
-    /// <param name="xamlPlatformInfo">The xaml platform info.</param>
-    /// <param name="projectInfo">The project info.</param>
-    public ThemeOptimizer(ThemeOptimizerSettings themeOptimizerSettings, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public ThemeOptimizer(ThemeOptimizerSettings themeOptimizerSettings)
     {
         this.themeOptimizerSettings = themeOptimizerSettings;
-        this.xamlPlatformInfo = xamlPlatformInfo;
-        this.projectInfo = projectInfo;
-        this.themesDirectoryInfo = new DirectoryInfo(Path.Combine(this.projectInfo.ProjectDirectory.FullName, this.themeOptimizerSettings.ThemesPath));
     }
 
     /// <inheritdoc/>
     public IReadOnlyList<XamlPlatform> SupportedPlatforms => [XamlPlatform.WPF];
 
     /// <inheritdoc/>
-    public ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles)
+    public ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
-        var themeDefinitionFiles = xamlFiles.Where(xamlFile => this.BelongsTo(xamlFile, this.themesDirectoryInfo, SearchOption.TopDirectoryOnly)).ToArray();
+        var themesDirectoryInfo = new DirectoryInfo(Path.Combine(projectInfo.ProjectDirectory.FullName, this.themeOptimizerSettings.ThemesPath));
+
+        var themeDefinitionFiles = xamlFiles.Where(xamlFile => this.BelongsTo(xamlFile, themesDirectoryInfo, SearchOption.TopDirectoryOnly)).ToArray();
         var themes = themeDefinitionFiles.Select(xamlFile =>
         {
             var fileInfo = new FileInfo(xamlFile.Reference.Path);
@@ -85,7 +79,7 @@ public class ThemeOptimizer : IXamlOptimizer
                     this.GetShared(xamlFiles, themeModesDirectoryInfo, themeModes));
             }).ToArray();
 
-        var themeRoot = new ThemeRoot(themeDatas, this.GetShared(xamlFiles, this.themesDirectoryInfo, themes));
+        var themeRoot = new ThemeRoot(themeDatas, this.GetShared(xamlFiles, themesDirectoryInfo, themes));
 
         var additionalFiles = new ConcurrentBag<AdditionalFile>();
         var xamlFileChanges = new ConcurrentBag<XamlFileChange>();
@@ -98,7 +92,7 @@ public class ThemeOptimizer : IXamlOptimizer
         foreach (var themeData in themeRoot.Themes)
         {
             // Create additional files
-            this.UpdateResources(themeData.Theme, themeRoot.SharedThemeXamlFiles, themeData.ThemeFiles, additionalFiles, ThemeResourceDictionaryXamlType, xamlFileChanges);
+            this.UpdateResources(themeData.Theme, themeRoot.SharedThemeXamlFiles, themeData.ThemeFiles, additionalFiles, ThemeResourceDictionaryXamlType, xamlFileChanges, xamlPlatformInfo, projectInfo);
             foreach (var sharedXamlFile in themeData.SharedModeXamlFiles)
             {
                 // Remove sharedXamlFile
@@ -107,7 +101,7 @@ public class ThemeOptimizer : IXamlOptimizer
 
             foreach (var themeModeData in themeData.ThemeModes)
             {
-                this.UpdateResources(themeModeData.ThemeMode, themeData.SharedModeXamlFiles, themeModeData.ThemeModeFiles, additionalFiles, ThemeModeResourceDictionaryXamlType, xamlFileChanges);
+                this.UpdateResources(themeModeData.ThemeMode, themeData.SharedModeXamlFiles, themeModeData.ThemeModeFiles, additionalFiles, ThemeModeResourceDictionaryXamlType, xamlFileChanges, xamlPlatformInfo, projectInfo);
             }
 
             // Update themeData.Theme.MainXamlFile
@@ -117,13 +111,13 @@ public class ThemeOptimizer : IXamlOptimizer
         return OptimizationResult.From(xamlFileChanges, additionalFiles);
     }
 
-    private void UpdateResources(Resource resource, IReadOnlyList<XamlFile> sharedResourceFiles, IReadOnlyList<XamlFile> resourceFiles, ConcurrentBag<AdditionalFile> additionalFiles, XamlType resourceDictionaryType, ConcurrentBag<XamlFileChange> xamlFileChanges)
+    private void UpdateResources(Resource resource, IReadOnlyList<XamlFile> sharedResourceFiles, IReadOnlyList<XamlFile> resourceFiles, ConcurrentBag<AdditionalFile> additionalFiles, XamlType resourceDictionaryType, ConcurrentBag<XamlFileChange> xamlFileChanges, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
         // Create additional files
-        var sharedThemeModeUris = sharedResourceFiles.Select(xamlFile => this.PrepareSharedFiles(xamlFile, resource.DirectoryInfo, resourceFiles, resourceDictionaryType, additionalFiles)).ToArray();
+        var sharedThemeModeUris = sharedResourceFiles.Select(xamlFile => this.PrepareSharedFiles(xamlFile, resource.DirectoryInfo, resourceFiles, resourceDictionaryType, additionalFiles, xamlPlatformInfo, projectInfo)).ToArray();
 
         // Add MergedRDs sharedXamlFile to themeModeData.ThemeMode.MainXamlFile ThemeModeResourceDictionary
-        var wasChanged = this.AddResources(resource.MainXamlFile.Document, sharedThemeModeUris, resourceDictionaryType, resource.MainXamlFile.LineEndings);
+        var wasChanged = this.AddResources(resource.MainXamlFile.Document, sharedThemeModeUris, resourceDictionaryType, resource.MainXamlFile.LineEndings, xamlPlatformInfo);
         if (wasChanged)
         {
             // Update themeModeData.ThemeMode.MainXamlFile
@@ -131,7 +125,7 @@ public class ThemeOptimizer : IXamlOptimizer
         }
     }
 
-    private bool AddResources(XDocument xDocument, Uri[] sharedResourceUris, XamlType resourceDictionaryXamlType, string lineEndings)
+    private bool AddResources(XDocument xDocument, Uri[] sharedResourceUris, XamlType resourceDictionaryXamlType, string lineEndings, XamlPlatformInfo xamlPlatformInfo)
     {
         if (sharedResourceUris.Length == 0)
         {
@@ -140,13 +134,13 @@ public class ThemeOptimizer : IXamlOptimizer
 
         var mergedResourceDictionaryElement = xDocument.XPathSelectElement(
             Constants.DefaultResourceDictionaryMergedDictionariesXPath,
-            this.xamlPlatformInfo.XmlNamespaceResolver);
+            xamlPlatformInfo.XmlNamespaceResolver);
         if (!mergedResourceDictionaryElement.HasValue())
         {
-            mergedResourceDictionaryElement = new XElement(this.xamlPlatformInfo.SystemResourceDictionaryName + Constants.MergedDictionaries);
+            mergedResourceDictionaryElement = new XElement(xamlPlatformInfo.SystemResourceDictionaryName + Constants.MergedDictionaries);
             var resourceDictionaryElement = xDocument.XPathSelectElement(
                 Constants.DefaultResourceDictionaryXPath,
-                this.xamlPlatformInfo.XmlNamespaceResolver);
+                xamlPlatformInfo.XmlNamespaceResolver);
             if (!resourceDictionaryElement.HasValue())
             {
                 return false;
@@ -180,22 +174,24 @@ public class ThemeOptimizer : IXamlOptimizer
         DirectoryInfo resourceDirectoryInfo,
         IReadOnlyList<XamlFile> resourceFiles,
         XamlType resourceDictionaryType,
-        ConcurrentBag<AdditionalFile> additionalFiles)
+        ConcurrentBag<AdditionalFile> additionalFiles,
+        XamlPlatformInfo xamlPlatformInfo,
+        ProjectInfo projectInfo)
     {
         var sharedThemeModeLinkPath = Path.Combine(Path.Combine(Path.GetDirectoryName(sharedXamlFile.Reference.Id) ?? string.Empty, resourceDirectoryInfo.Name), Path.GetFileName(sharedXamlFile.Reference.Path));
 
         var xDocument = new XDocument(sharedXamlFile.Document);
-        this.AddResources(xDocument, resourceFiles.Select(x => this.GetXamlSourceUri(x.Reference.Id)).ToArray(), resourceDictionaryType, sharedXamlFile.LineEndings);
+        this.AddResources(xDocument, resourceFiles.Select(x => this.GetXamlSourceUri(x.Reference.Id, projectInfo)).ToArray(), resourceDictionaryType, sharedXamlFile.LineEndings, xamlPlatformInfo);
 
         // Output to intermediate file
-        var fileInfo = new FileInfo(Path.Combine(this.projectInfo.IntermediateDirectory.FullName, sharedThemeModeLinkPath));
-        additionalFiles.Add(new AdditionalFile(this.xamlPlatformInfo.DefaultItemType, fileInfo, xDocument.ToString(SaveOptions.DisableFormatting), sharedThemeModeLinkPath));
-        return this.GetXamlSourceUri(sharedThemeModeLinkPath);
+        var fileInfo = new FileInfo(Path.Combine(projectInfo.IntermediateDirectory.FullName, sharedThemeModeLinkPath));
+        additionalFiles.Add(new AdditionalFile(xamlPlatformInfo.DefaultItemType, fileInfo, xDocument.ToString(SaveOptions.DisableFormatting), sharedThemeModeLinkPath));
+        return this.GetXamlSourceUri(sharedThemeModeLinkPath, projectInfo);
     }
 
-    private Uri GetXamlSourceUri(string linkPath)
+    private Uri GetXamlSourceUri(string linkPath, ProjectInfo projectInfo)
     {
-        return new Uri($"/{this.projectInfo.AssemblyName};component/{linkPath.Replace('\\', '/')}", UriKind.Relative);
+        return new Uri($"/{projectInfo.AssemblyName};component/{linkPath.Replace('\\', '/')}", UriKind.Relative);
     }
 
     private IReadOnlyList<XamlFile> GetFiles(IReadOnlyList<XamlFile> xamlFiles, DirectoryInfo directoryInfo, DirectoryInfo? themeModesDirectoryInfo)

@@ -49,9 +49,9 @@ public class StaticToDynamicResourceOptimizerTests
         <Setter Property=""Background"" Value=""{{DynamicResource DynamicBrush🔄️}}"" />
     </Style>
 </ResourceDictionary>";
-        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -69,9 +69,9 @@ public class StaticToDynamicResourceOptimizerTests
     </Style>
 </ResourceDictionary>";
 
-        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Should().BeEmpty();
     }
@@ -91,9 +91,9 @@ public class StaticToDynamicResourceOptimizerTests
 
 </ResourceDictionary>";
 
-        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Should().BeEmpty();
     }
@@ -110,9 +110,9 @@ public class StaticToDynamicResourceOptimizerTests
     </Style>
 </ResourceDictionary>";
 
-        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"), this.xamlPlatformInfo, this.projectInfo);
+        var testee = new StaticToDynamicResourceOptimizer(new StaticToDynamicResourceSettings("🔄️"));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]);
+        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Should().BeEmpty();
     }

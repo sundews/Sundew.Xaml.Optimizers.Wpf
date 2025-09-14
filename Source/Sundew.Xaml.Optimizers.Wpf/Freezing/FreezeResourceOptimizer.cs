@@ -26,46 +26,15 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
     private const char SpaceCharacter = ' ';
     private static readonly XNamespace PresentationOptionsNamespace = "http://schemas.microsoft.com/winfx/2006/xaml/presentation/options";
     private static readonly XName FreezeName = PresentationOptionsNamespace + "Freeze";
-    private readonly XName keyName;
-    private readonly XamlPlatformInfo xamlPlatformInfo;
-    private readonly ProjectInfo projectInfo;
-    private readonly HashSet<XName> includedTypes;
     private readonly string? unfreezeMarker;
+    private readonly FreezeResourceSettings freezeResourceSettings;
 
     /// <summary>Initializes a new instance of the <see cref="FreezeResourceOptimizer"/> class.</summary>
-    /// <param name="xamlPlatformInfo">The xaml platform information.</param>
     /// <param name="freezeResourceSettings">The freeze resource settings.</param>
-    /// <param name="projectInfo">The project info.</param>
-    public FreezeResourceOptimizer(FreezeResourceSettings freezeResourceSettings, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public FreezeResourceOptimizer(FreezeResourceSettings freezeResourceSettings)
     {
-        this.xamlPlatformInfo = xamlPlatformInfo;
-        this.projectInfo = projectInfo;
-        this.includedTypes = freezeResourceSettings.IncludeFrameworkTypes
-            ? this.GetDefaultIncludedTypes(DefaultFreezables)
-            : new HashSet<XName>();
-        foreach (var includedType in freezeResourceSettings.IncludedTypes)
-        {
-            var xName = XName.Get(includedType);
-            if (xName.Namespace == XNamespace.None)
-            {
-                xName = this.xamlPlatformInfo.PresentationNamespace + includedType;
-            }
+        this.freezeResourceSettings = freezeResourceSettings;
 
-            this.includedTypes.Add(xName);
-        }
-
-        foreach (var excludedType in freezeResourceSettings.ExcludedTypes)
-        {
-            var xName = XName.Get(excludedType);
-            if (xName.Namespace == XNamespace.None)
-            {
-                xName = this.xamlPlatformInfo.PresentationNamespace + excludedType;
-            }
-
-            this.includedTypes.Remove(xName);
-        }
-
-        this.keyName = this.xamlPlatformInfo.XamlNamespace + "Key";
         this.unfreezeMarker = freezeResourceSettings.UnfreezeMarker;
     }
 
@@ -74,26 +43,53 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
     public IReadOnlyList<XamlPlatform> SupportedPlatforms { get; } = [XamlPlatform.WPF];
 
     /// <inheritdoc/>
-    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles)
+    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
+        var includedTypes = this.freezeResourceSettings.IncludeFrameworkTypes
+            ? this.GetDefaultIncludedTypes(xamlPlatformInfo, DefaultFreezables)
+            : new HashSet<XName>();
+        var keyName = xamlPlatformInfo.XamlNamespace + "Key";
+
+        foreach (var includedType in this.freezeResourceSettings.IncludedTypes)
+        {
+            var xName = XName.Get(includedType);
+            if (xName.Namespace == XNamespace.None)
+            {
+                xName = xamlPlatformInfo.PresentationNamespace + includedType;
+            }
+
+            includedTypes.Add(xName);
+        }
+
+        foreach (var excludedType in this.freezeResourceSettings.ExcludedTypes)
+        {
+            var xName = XName.Get(excludedType);
+            if (xName.Namespace == XNamespace.None)
+            {
+                xName = xamlPlatformInfo.PresentationNamespace + excludedType;
+            }
+
+            includedTypes.Remove(xName);
+        }
+
         var xamlFileChanges = new ConcurrentBag<XamlFileChange>();
         await xamlFiles.ParallelForEachAsync(
-            new ParallelOptions { MaxDegreeOfParallelism = this.projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
+            new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
             (file, token) =>
             {
                 var hasBeenOptimized = false;
                 var rootElement = file.Document.Root;
                 if (rootElement.HasValue())
                 {
-                    if (rootElement.Name == this.xamlPlatformInfo.SystemResourceDictionaryName)
+                    if (rootElement.Name == xamlPlatformInfo.SystemResourceDictionaryName)
                     {
-                        this.TryOptimize(rootElement, rootElement, ref hasBeenOptimized);
+                        this.TryOptimize(rootElement, rootElement, ref hasBeenOptimized, xamlPlatformInfo, keyName, includedTypes);
 
                         foreach (var resourcesElement in rootElement
                                      .Descendants()
                                      .Where(x => x.Name.LocalName.EndsWith(Constants.ResourcesName)))
                         {
-                            this.TryOptimize(resourcesElement, rootElement, ref hasBeenOptimized);
+                            this.TryOptimize(resourcesElement, rootElement, ref hasBeenOptimized, xamlPlatformInfo, keyName, includedTypes);
                         }
                     }
 
@@ -108,12 +104,12 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
                             break;
                         }
 
-                        if (firstElement.Name == this.xamlPlatformInfo.SystemResourceDictionaryName)
+                        if (firstElement.Name == xamlPlatformInfo.SystemResourceDictionaryName)
                         {
                             elementToOptimize = firstElement;
                         }
 
-                        this.TryOptimize(elementToOptimize, rootElement, ref hasBeenOptimized);
+                        this.TryOptimize(elementToOptimize, rootElement, ref hasBeenOptimized, xamlPlatformInfo, keyName, includedTypes);
                     }
                 }
 
@@ -128,27 +124,27 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
         return OptimizationResult.From(xamlFileChanges);
     }
 
-    private void TryOptimize(XElement elementToOptimize, XElement rootElement, ref bool hasBeenOptimized)
+    private void TryOptimize(XElement elementToOptimize, XElement rootElement, ref bool hasBeenOptimized, XamlPlatformInfo xamlPlatformInfo, XName keyName, HashSet<XName> includedTypes)
     {
         var hasAddedNamespaces = false;
         foreach (var element in elementToOptimize.Elements()
-                     .Where(x => this.includedTypes.Contains(x.Name)
-                                 && this.AllowsFreezing(x)))
+                     .Where(x => includedTypes.Contains(x.Name)
+                                 && this.AllowsFreezing(x, keyName)))
         {
             if (!hasAddedNamespaces)
             {
                 var poAttribute = rootElement.EnsureXmlNamespaceAttribute(
                     PresentationOptionsNamespace,
                     PoPrefix,
-                    this.xamlPlatformInfo.XamlNamespace,
-                    this.xamlPlatformInfo.DesignerNamespace);
+                    xamlPlatformInfo.XamlNamespace,
+                    xamlPlatformInfo.DesignerNamespace);
 
                 rootElement.EnsureXmlNamespaceAttribute(
-                    this.xamlPlatformInfo.MarkupCompatibilityNamespace,
-                    this.xamlPlatformInfo.MarkupCompatibilityPrefix,
+                    xamlPlatformInfo.MarkupCompatibilityNamespace,
+                    xamlPlatformInfo.MarkupCompatibilityPrefix,
                     PresentationOptionsNamespace);
 
-                var ignorableAttribute = rootElement.Attribute(this.xamlPlatformInfo.IgnorableName);
+                var ignorableAttribute = rootElement.Attribute(xamlPlatformInfo.IgnorableName);
                 if (ignorableAttribute != null)
                 {
                     if (!ignorableAttribute.Value.Split(SpaceCharacter).Contains(PoPrefix))
@@ -158,7 +154,7 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
                 }
                 else
                 {
-                    rootElement.Add(new XAttribute(this.xamlPlatformInfo.IgnorableName, poAttribute.Name.LocalName));
+                    rootElement.Add(new XAttribute(xamlPlatformInfo.IgnorableName, poAttribute.Name.LocalName));
                 }
 
                 hasAddedNamespaces = true;
@@ -169,7 +165,7 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
         }
     }
 
-    private bool AllowsFreezing(XElement xElement)
+    private bool AllowsFreezing(XElement xElement, XName keyName)
     {
         if (xElement.Attributes().FirstOrDefault(xAttribute => xAttribute.Name == FreezeName) != null)
         {
@@ -181,15 +177,15 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
             return true;
         }
 
-        return !xElement.Attribute(this.keyName)?.Value.Contains(this.unfreezeMarker) ?? false;
+        return !xElement.Attribute(keyName)?.Value.Contains(this.unfreezeMarker) ?? false;
     }
 
-    private HashSet<XName> GetDefaultIncludedTypes(params string[] types)
+    private HashSet<XName> GetDefaultIncludedTypes(XamlPlatformInfo xamlPlatformInfo, params string[] types)
     {
         var hashSet = new HashSet<XName>();
         foreach (var type in types)
         {
-            hashSet.Add(this.xamlPlatformInfo.PresentationNamespace + type);
+            hashSet.Add(xamlPlatformInfo.PresentationNamespace + type);
         }
 
         return hashSet;

@@ -57,8 +57,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-		<PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250907-220120-ci" />
-		<PackageReference Include="System.IO.Abstractions" Version="22.0.15" />
+		<PackageReference Include="Sundew.Xaml.Optimization" Version="3.0.0-u20250914-133414-ci" />
+		<PackageReference Include="System.IO.Abstractions" Version="22.0.16" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
