@@ -13,7 +13,9 @@
     <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Solution Items/">
+    <File Path="../.gitattributes" />
     <File Path="../.github/workflows/dotnet.yml" />
+    <File Path="../.gitignore" />
     <File Path=".editorconfig" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />

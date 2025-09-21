@@ -11,6 +11,7 @@
     <WarningsAsErrors />
     <DefineConstants>TRACE;WPF</DefineConstants>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Description>Support library for https://www.nuget.org/packages/Sundew.Xaml.Optimizations.Wpf.</Description>
 	</PropertyGroup>
   
   <ItemGroup>
