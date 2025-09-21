@@ -38,7 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Xaml.Theming.Wpf" Version="0.1.0-u20250914-143042-ci" />
+    <PackageReference Include="Sundew.Xaml.Theming.Wpf" Version="0.1.0-u20250921-213258-ci" />
     <PackageReference Include="Sundew.Packaging.Publish" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
