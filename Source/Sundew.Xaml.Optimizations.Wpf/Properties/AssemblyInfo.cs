@@ -11,4 +11,4 @@ using Sundew.Xaml;
 
 [assembly: XmlnsDefinition(Constants.SundewXamlXmlNamespace, "Sundew.Xaml.Optimizations")]
 [assembly: XmlnsPrefix(Constants.SundewXamlXmlNamespace, "sx")]
-[assembly: InternalsVisibleTo("Sundew.Xaml.Optimizers.Wpf.Tests")]
+[assembly: InternalsVisibleTo("Sundew.Xaml.Optimizers.Wpf.Development.Tests")]

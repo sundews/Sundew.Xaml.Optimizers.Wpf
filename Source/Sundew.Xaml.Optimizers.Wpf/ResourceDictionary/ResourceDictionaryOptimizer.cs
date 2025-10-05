@@ -59,7 +59,7 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
                 xamlPlatformInfo.XmlNamespaceResolver);
             var hasBeenOptimized = false;
             var hasSxoNamespace = false;
-            if (!xamlFile.Document.Root.HasValue())
+            if (!xamlFile.Document.Root.HasValue)
             {
                 return Task.CompletedTask;
             }

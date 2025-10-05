@@ -79,7 +79,7 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
             {
                 var hasBeenOptimized = false;
                 var rootElement = file.Document.Root;
-                if (rootElement.HasValue())
+                if (rootElement.HasValue)
                 {
                     if (rootElement.Name == xamlPlatformInfo.SystemResourceDictionaryName)
                     {

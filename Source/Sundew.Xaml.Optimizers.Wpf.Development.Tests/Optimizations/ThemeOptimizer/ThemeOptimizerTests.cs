@@ -1,4 +1,11 @@
-﻿namespace Sundew.Xaml.Optimizers.Wpf.Tests.Optimizations.ThemeOptimizer;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ThemeOptimizerTests.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace Sundew.Xaml.Optimizers.Wpf.Development.Tests.Optimizations.ThemeOptimizer;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +22,10 @@ using Xunit;
 
 public class ThemeOptimizerTests
 {
+    private const string WinNewLine = "\r\n";
+
+    private const string UnixNewLine = "\n";
+
     private readonly ProjectInfo projectInfo;
     private readonly XamlPlatformInfo xamlPlatformInfo;
 
@@ -23,6 +34,7 @@ public class ThemeOptimizerTests
         this.xamlPlatformInfo = new XamlPlatformInfo(XamlPlatform.WPF, Constants.WpfPresentationNamespace, Constants.WpfXamlNamespace);
         this.projectInfo = ProjectInfoHelper.ForTesting<ThemeOptimizerTests>(false, projectDirectory: new FileInfo(typeof(ThemeOptimizerTests).Assembly.Location).Directory?.FullName ?? string.Empty);
     }
+
     [Fact]
     public async Task OptimizeAsync_Then_ResultShouldBeExpectedResult()
     {
@@ -33,30 +45,7 @@ public class ThemeOptimizerTests
         result.IsSuccess.Should().BeTrue();
     }
 
-    private async Task<XamlFile[]> GetXamlFiles()
-    {
-        var files = new DirectoryInfo(Path.Combine(new FileInfo(typeof(ThemeOptimizerTests).Assembly.Location).Directory?.FullName ?? string.Empty, "Themes")).GetFiles("*.xaml", SearchOption.AllDirectories).Select(x => new FileReference(x.FullName, Path.GetRelativePath(this.projectInfo.ProjectDirectory.FullName, x.FullName)));
-        return (await files.SelectAsync(async fileReference =>
-        {
-            var xDocument = XDocument.Parse(
-                await File.ReadAllTextAsync(fileReference.Path),
-                LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
-            return new XamlFile(
-                xDocument,
-                fileReference,
-                GetLineEnding(xDocument));
-        })).ToArray();
-    }
-
-    private const string WinNewLine = "\r\n";
-    private const string UnixNewLine = "\n";
-
-    /// <summary>
-    /// Gets the line ending.
-    /// </summary>
-    /// <param name="xDocument">The x document.</param>
-    /// <returns>The line ending.</returns>
-    public static string GetLineEnding(XDocument xDocument)
+    private static string GetLineEnding(XDocument xDocument)
     {
         var element = xDocument.Root;
         if (element != null)
@@ -88,17 +77,27 @@ public class ThemeOptimizerTests
         return Environment.NewLine;
     }
 
+    private async Task<XamlFile[]> GetXamlFiles()
+    {
+        var files = new DirectoryInfo(Path.Combine(new FileInfo(typeof(ThemeOptimizerTests).Assembly.Location).Directory?.FullName ?? string.Empty, "Themes")).GetFiles("*.xaml", SearchOption.AllDirectories).Select(x => new FileReference(x.FullName, Path.GetRelativePath(this.projectInfo.ProjectDirectory.FullName, x.FullName)));
+        return (await files.SelectAsync(async fileReference =>
+        {
+            var xDocument = XDocument.Parse(
+                await File.ReadAllTextAsync(fileReference.Path),
+                LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+            return new XamlFile(
+                xDocument,
+                fileReference,
+                GetLineEnding(xDocument));
+        })).ToArray();
+    }
+
     private class FileReference : IFileReference
     {
         public FileReference(string path, string id)
         {
             this.Path = path;
             this.Id = id;
-        }
-
-        public string GetEvaluatedPath()
-        {
-            return this.Path;
         }
 
         public string Id { get; }

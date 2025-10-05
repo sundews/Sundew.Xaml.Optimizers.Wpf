@@ -30,5 +30,6 @@
     <EmbeddedFiles Include="$(GeneratedAssemblyInfoFile)"/>
     <None Include="..\..\README.md" Pack="true" PackagePath="\docs"/>
   </ItemGroup>
-  <Import Project="Directory.Build.props.user" Condition="Exists('Directory.Build.props.user')"/>
+
+	<Import Project="Directory.Build.props.user" Condition="Exists('Directory.Build.props.user')"/>
 </Project>

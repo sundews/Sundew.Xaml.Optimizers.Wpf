@@ -135,13 +135,13 @@ public class ThemeOptimizer : IXamlOptimizer
         var mergedResourceDictionaryElement = xDocument.XPathSelectElement(
             Constants.DefaultResourceDictionaryMergedDictionariesXPath,
             xamlPlatformInfo.XmlNamespaceResolver);
-        if (!mergedResourceDictionaryElement.HasValue())
+        if (!mergedResourceDictionaryElement.HasValue)
         {
             mergedResourceDictionaryElement = new XElement(xamlPlatformInfo.SystemResourceDictionaryName + Constants.MergedDictionaries);
             var resourceDictionaryElement = xDocument.XPathSelectElement(
                 Constants.DefaultResourceDictionaryXPath,
                 xamlPlatformInfo.XmlNamespaceResolver);
-            if (!resourceDictionaryElement.HasValue())
+            if (!resourceDictionaryElement.HasValue)
             {
                 return false;
             }

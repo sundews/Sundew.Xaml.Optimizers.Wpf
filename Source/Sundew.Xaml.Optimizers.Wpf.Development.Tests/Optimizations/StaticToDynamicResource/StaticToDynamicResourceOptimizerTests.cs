@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Xaml.Optimizers.Wpf.Tests.Optimizations.StaticToDynamicResource;
+namespace Sundew.Xaml.Optimizers.Wpf.Development.Tests.Optimizations.StaticToDynamicResource;
 
 using System;
 using System.Linq;

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0-windows10.0.17763.0</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <UseWpf>true</UseWpf>
+    <NoWarn>1701;1702;CS1591</NoWarn>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Optimizations\Bindings\**" />
+    <Compile Remove="Themes\**" />
+    <EmbeddedResource Remove="Optimizations\Bindings\**" />
+    <EmbeddedResource Remove="Themes\**" />
+    <None Remove="Optimizations\Bindings\**" />
+    <None Remove="Themes\**" />
+    <Page Remove="Optimizations\Bindings\**" />
+		<Content Include="Themes\**\*.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sundew.Base" />
+    <PackageReference Include="System.IO.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sundew.Xaml.Optimizers.Wpf\Sundew.Xaml.Optimizers.Wpf.csproj" />
+    <ProjectReference Include="..\Sundew.Xaml.Optimizations.Wpf\Sundew.Xaml.Optimizations.Wpf.csproj">
+      <Aliases>sx</Aliases>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>

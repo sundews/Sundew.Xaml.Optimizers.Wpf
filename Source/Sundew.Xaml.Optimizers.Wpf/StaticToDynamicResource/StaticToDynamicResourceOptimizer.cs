@@ -54,7 +54,7 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
             new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
             (xamlFile, token) =>
         {
-            if (!xamlFile.Document.Root.HasValue())
+            if (!xamlFile.Document.Root.HasValue)
             {
                 return Task.CompletedTask;
             }

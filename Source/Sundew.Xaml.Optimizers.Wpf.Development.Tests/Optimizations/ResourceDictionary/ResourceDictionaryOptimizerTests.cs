@@ -1,11 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ResourceDictionaryCachingOptimizerTests.cs" company="Sundews">
+// <copyright file="ResourceDictionaryOptimizerTests.cs" company="Sundews">
 // Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Xaml.Optimizers.Wpf.Tests.Optimizations.ResourceDictionary;
+namespace Sundew.Xaml.Optimizers.Wpf.Development.Tests.Optimizations.ResourceDictionary;
 
 using System;
 using System.Linq;

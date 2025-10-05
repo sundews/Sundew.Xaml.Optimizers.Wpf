@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Xaml.Optimizers.Wpf.Tests.Optimizations.Freezing;
+namespace Sundew.Xaml.Optimizers.Wpf.Development.Tests.Optimizations.Freezing;
 
 using System;
 using System.Linq;

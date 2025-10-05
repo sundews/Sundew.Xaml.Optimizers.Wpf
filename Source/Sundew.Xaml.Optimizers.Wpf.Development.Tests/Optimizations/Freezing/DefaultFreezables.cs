@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Xaml.Optimizers.Wpf.Tests.Optimizations.Freezing;
+namespace Sundew.Xaml.Optimizers.Wpf.Development.Tests.Optimizations.Freezing;
 
 using System;
 using System.Linq;
@@ -20,9 +20,9 @@ using Sundew.Xaml.Optimizers.Wpf.Freezing;
 using Xunit;
 
 /// <summary>Contains the collection of default freezables.</summary>
-public class DefaultFreezableTests
+public class DefaultFreezables
 {
-    private static readonly Type[] DefaultFreezables =
+    private static readonly Type[] Types =
     {
         typeof(TextDecoration),
         typeof(TextDecorationCollection),
@@ -276,6 +276,6 @@ public class DefaultFreezableTests
     [Fact]
     public void DefaultFreezablesShouldMatchFrameworkFreezablesList()
     {
-        FreezeResourceOptimizer.DefaultFreezables.SequenceEqual(DefaultFreezables.Select(x => x.Name));
+        FreezeResourceOptimizer.DefaultFreezables.SequenceEqual(Types.Select(x => x.Name));
     }
 }
