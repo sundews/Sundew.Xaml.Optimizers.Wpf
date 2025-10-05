@@ -34,14 +34,18 @@
   </ItemGroup>
 
   <ItemGroup>
-		<PackageReference Include="ILRepack.Lib.MSBuild.Task" >
+		<PackageReference Include="ILRepack.Lib.MSBuild.Task">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 		<PackageReference Include="Newtonsoft.Json" />
-		<PackageReference Include="Sundew.Base"  />
+		<PackageReference Include="Sundew.Base" />
 		<PackageReference Include="Sundew.Xaml.Optimization" />
 		<PackageReference Include="System.IO.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sundew.Xaml.Optimizations.Wpf\Sundew.Xaml.Optimizations.Wpf.csproj" ReferenceOutputAssembly="false"/>
   </ItemGroup>
  
   <Target Name="SetNuspecProperties" BeforeTargets="GenerateNuspec">
