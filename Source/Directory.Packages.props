@@ -16,7 +16,7 @@
     <PackageVersion Include="Sundew.Base" Version="15.0.0-u20251005-141352-ci" />
     <PackageVersion Include="Sundew.Packaging.Publish" Version="10.0.10-u20251005-144150-ci" />
     <PackageVersion Include="Sundew.Xaml.Optimization" Version="3.0.0-u20251005-213009-ci" />
-    <PackageVersion Include="Sundew.Xaml.Theming.Wpf" Version="0.1.0-u20251005-200941-ci" />
+    <PackageVersion Include="Sundew.Xaml.Theming.Wpf" Version="0.1.0-u20251101-221236-ci" />
     <PackageVersion Include="System.IO.Abstractions" Version="22.0.16" />
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
