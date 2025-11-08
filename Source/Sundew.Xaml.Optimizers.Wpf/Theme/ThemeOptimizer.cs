@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Sundew.Base;
+using Sundew.Base.Collections.Linq;
 using Sundew.Xaml.Optimization;
 using Sundew.Xaml.Optimization.Xml;
 using Sundew.Xaml.Optimizers.Wpf.ResourceDictionary.Internal;
@@ -44,9 +45,13 @@ public class ThemeOptimizer : IXamlOptimizer
     public IReadOnlyList<XamlPlatform> SupportedPlatforms => [XamlPlatform.WPF];
 
     /// <inheritdoc/>
-    public ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public ValueTask<OptimizationResult> OptimizeAsync(XamlFiles xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
         var themesDirectoryInfo = new DirectoryInfo(Path.Combine(projectInfo.ProjectDirectory.FullName, this.themeOptimizerSettings.ThemesPath));
+        if (!themesDirectoryInfo.Exists)
+        {
+            return OptimizationResult.None();
+        }
 
         var themeDefinitionFiles = xamlFiles.Where(xamlFile => this.BelongsTo(xamlFile, themesDirectoryInfo, SearchOption.TopDirectoryOnly)).ToArray();
         var themes = themeDefinitionFiles.Select(xamlFile =>
@@ -58,10 +63,13 @@ public class ThemeOptimizer : IXamlOptimizer
         var themeDatas = themes
             .Select(theme =>
             {
-                var themeModes = xamlFiles.Where(xamlFile => this.BelongsTo(
-                        xamlFile,
-                        new DirectoryInfo(Path.Combine(theme.ThemeDirectoryInfo.FullName, this.themeOptimizerSettings.ThemeModesPath)),
-                        SearchOption.TopDirectoryOnly))
+                var themeModesDirectoryInfo = new DirectoryInfo(Path.Combine(theme.ThemeDirectoryInfo.FullName, this.themeOptimizerSettings.ThemeModesPath));
+                if (!themeModesDirectoryInfo.Exists)
+                {
+                    return null;
+                }
+
+                var themeModes = xamlFiles.Where(xamlFile => this.BelongsTo(xamlFile, themeModesDirectoryInfo, SearchOption.TopDirectoryOnly))
                     .Select(xamlFile =>
                     {
                         var fileInfo = new FileInfo(xamlFile.Reference.Path);
@@ -69,7 +77,6 @@ public class ThemeOptimizer : IXamlOptimizer
                     })
                     .Where(x => x.ThemeModeDirectoryInfo.Exists)
                     .ToArray();
-                var themeModesDirectoryInfo = new DirectoryInfo(Path.Combine(theme.ThemeDirectoryInfo.FullName, this.themeOptimizerSettings.ThemeModesPath));
                 return new ThemeData(
                     theme,
                     themeModes.Select(resourceSetInfo => new ThemeModeData(
@@ -77,7 +84,9 @@ public class ThemeOptimizer : IXamlOptimizer
                                 this.GetFiles(xamlFiles, resourceSetInfo.ThemeModeDirectoryInfo, null))).ToArray(),
                     this.GetFiles(xamlFiles, theme.ThemeDirectoryInfo, themeModesDirectoryInfo),
                     this.GetShared(xamlFiles, themeModesDirectoryInfo, themeModes));
-            }).ToArray();
+            })
+            .WhereNotNull()
+            .ToArray();
 
         var themeRoot = new ThemeRoot(themeDatas, this.GetShared(xamlFiles, themesDirectoryInfo, themes));
 

@@ -44,14 +44,13 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
     /// <param name="xamlPlatformInfo">The xaml platform info.</param>
     /// <param name="projectInfo">The project info.</param>
     /// <returns>A result with the optimized <see cref="XDocument"/>, if successful.</returns>
-    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public async ValueTask<OptimizationResult> OptimizeAsync(XamlFiles xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
         var defaultReplacementType = this.resourceDictionarySettings.DefaultReplacementType != null ? XamlType.TryParse(this.resourceDictionarySettings.DefaultReplacementType) ?? FallbackReplacementType : FallbackReplacementType;
         var defaultReplaceUncategorized = this.resourceDictionarySettings.ReplaceUncategorized ?? xamlPlatformInfo.XamlPlatform == XamlPlatform.WPF;
 
         var xamlFilesChanges = new ConcurrentBag<XamlFileChange>();
-        await xamlFiles.ParallelForEachAsync(
-            new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
+        await xamlFiles.ForEachAsync(
             (xamlFile, token) =>
         {
             var mergedResourceDictionaries = xamlFile.Document.XPathSelectElements(

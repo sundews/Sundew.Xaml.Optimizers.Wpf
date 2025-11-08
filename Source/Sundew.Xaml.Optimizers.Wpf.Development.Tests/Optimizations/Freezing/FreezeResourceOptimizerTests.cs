@@ -53,7 +53,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -79,7 +79,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -108,7 +108,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -135,7 +135,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings(true));
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles(new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -165,7 +165,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -196,7 +196,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -227,7 +227,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -270,7 +270,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -309,7 +309,7 @@ public class FreezeResourceOptimizerTests
 </ResourceDictionary>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -343,7 +343,7 @@ public class FreezeResourceOptimizerTests
 </{rootType}>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -381,7 +381,7 @@ public class FreezeResourceOptimizerTests
 </{rootType}>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -422,7 +422,7 @@ public class FreezeResourceOptimizerTests
 </{rootType}>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
@@ -459,7 +459,7 @@ public class FreezeResourceOptimizerTests
 </{rootType}>";
         var testee = new FreezeResourceOptimizer(new FreezeResourceSettings());
 
-        var result = await testee.OptimizeAsync([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)], this.xamlPlatformInfo, this.projectInfo);
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }

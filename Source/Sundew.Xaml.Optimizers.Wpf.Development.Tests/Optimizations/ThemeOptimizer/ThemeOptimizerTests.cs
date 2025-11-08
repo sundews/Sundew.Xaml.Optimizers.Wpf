@@ -77,10 +77,10 @@ public class ThemeOptimizerTests
         return Environment.NewLine;
     }
 
-    private async Task<XamlFile[]> GetXamlFiles()
+    private async Task<XamlFiles> GetXamlFiles()
     {
         var files = new DirectoryInfo(Path.Combine(new FileInfo(typeof(ThemeOptimizerTests).Assembly.Location).Directory?.FullName ?? string.Empty, "Themes")).GetFiles("*.xaml", SearchOption.AllDirectories).Select(x => new FileReference(x.FullName, Path.GetRelativePath(this.projectInfo.ProjectDirectory.FullName, x.FullName)));
-        return (await files.SelectAsync(async fileReference =>
+        return new XamlFiles((await files.SelectAsync(async fileReference =>
         {
             var xDocument = XDocument.Parse(
                 await File.ReadAllTextAsync(fileReference.Path),
@@ -89,7 +89,7 @@ public class ThemeOptimizerTests
                 xDocument,
                 fileReference,
                 GetLineEnding(xDocument));
-        })).ToArray();
+        })).ToArray());
     }
 
     private class FileReference : IFileReference

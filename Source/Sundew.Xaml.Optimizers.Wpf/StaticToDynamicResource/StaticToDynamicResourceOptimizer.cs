@@ -46,12 +46,11 @@ public sealed class StaticToDynamicResourceOptimizer : IXamlOptimizer
     /// <param name="xamlPlatformInfo">The xaml platform info.</param>
     /// <param name="projectInfo">The project info.</param>
     /// <returns>The optimization result.</returns>
-    public async ValueTask<OptimizationResult> OptimizeAsync(IReadOnlyList<XamlFile> xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
+    public async ValueTask<OptimizationResult> OptimizeAsync(XamlFiles xamlFiles, XamlPlatformInfo xamlPlatformInfo, ProjectInfo projectInfo)
     {
         var keyName = xamlPlatformInfo.XamlNamespace + "Key";
         var xamlFileChanges = new ConcurrentBag<XamlFileChange>();
-        await xamlFiles.ParallelForEachAsync(
-            new ParallelOptions { MaxDegreeOfParallelism = projectInfo.IsDebugging ? 1 : Environment.ProcessorCount },
+        await xamlFiles.ForEachAsync(
             (xamlFile, token) =>
         {
             if (!xamlFile.Document.Root.HasValue)
