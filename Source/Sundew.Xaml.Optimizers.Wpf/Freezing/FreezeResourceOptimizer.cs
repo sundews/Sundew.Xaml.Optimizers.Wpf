@@ -162,12 +162,6 @@ public partial class FreezeResourceOptimizer : IXamlOptimizer
                     rootElement.Add(new XAttribute(xamlPlatformInfo.IgnorableName, poAttribute.Name.LocalName));
                 }
 
-                rootElement.EnsureXmlNamespaceAttribute(
-                    PresentationOptionsNamespace,
-                    poAttribute.Name.LocalName,
-                    xamlPlatformInfo.XamlNamespace,
-                    xamlPlatformInfo.DesignerNamespace);
-
                 hasAddedNamespaces = true;
             }
 

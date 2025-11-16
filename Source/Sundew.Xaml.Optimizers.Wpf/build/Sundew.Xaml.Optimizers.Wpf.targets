@@ -8,14 +8,4 @@
 	<ItemGroup>
 		<Sxo Include="$(_SundewXamlOptimizers)"/>
 	</ItemGroup>
-
-	<Target Name="CopyPackageFiles" BeforeTargets="OptimizeXamlResources">
-		<ItemGroup>
-			<PackageContentFiles Include="$(MSBuildThisFileDirectory)../content/**/*" />
-		</ItemGroup>
-		<Copy SourceFiles="@(PackageContentFiles)"
-		      DestinationFiles="@(PackageContentFiles->'$(ProjectDir)/sxo/%(RecursiveDir)%(Filename)%(Extension)')" 
-		      Condition="!Exists('@(PackageContentFiles->'$(ProjectDir)/sxo/%(RecursiveDir)%(Filename)%(Extension)')')"
-			  SkipUnchangedFiles="true" />
-	</Target>
 </Project>
