@@ -24,6 +24,7 @@ using Sundew.Xaml.Optimizers.Wpf.ResourceDictionary.Internal;
 /// </summary>
 public class ResourceDictionaryOptimizer : IXamlOptimizer
 {
+    internal const string CategoryNotMapped = "RDO0001";
     private const string Source = "Source";
     private static readonly XamlType FallbackReplacementType = new XamlType(Constants.SxPrefix, Constants.SundewXamlOptimizationNamespace, Constants.ResourceDictionaryName);
     private readonly ResourceDictionarySettings resourceDictionarySettings;
@@ -50,19 +51,21 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
         var defaultReplaceUncategorized = this.resourceDictionarySettings.ReplaceUncategorized ?? xamlPlatformInfo.XamlPlatform == XamlPlatform.WPF;
 
         var xamlFilesChanges = new ConcurrentBag<XamlFileChange>();
+        var xamlDiagnostics = new ConcurrentBag<XamlDiagnostic>();
         await xamlFiles.ForEachAsync(
             (xamlFile, token) =>
         {
-            var mergedResourceDictionaries = xamlFile.Document.XPathSelectElements(
-                Constants.DefaultResourceDictionaryMergedDictionariesDefaultResourceDictionaryXPath,
-                xamlPlatformInfo.XmlNamespaceResolver);
-            var hasBeenOptimized = false;
-            var hasSxoNamespace = false;
             if (!xamlFile.Document.Root.HasValue)
             {
                 return Task.CompletedTask;
             }
 
+            var mergedResourceDictionaries = xamlFile.Document.XPathSelectElements(
+                Constants.DefaultResourceDictionaryMergedDictionariesDefaultResourceDictionaryXPath,
+                xamlPlatformInfo.XmlNamespaceResolver);
+
+            var hasBeenOptimized = false;
+            var hasSxoNamespace = false;
             foreach (var xElement in mergedResourceDictionaries.ToList())
             {
                 var optimization = OptimizationProvider.GetOptimizationInfo(
@@ -95,6 +98,11 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
                             new XAttribute(Constants.SourceText, optimization.Source)));
                         break;
                 }
+
+                if (optimization.XamlDiagnostic.HasValue)
+                {
+                    xamlDiagnostics.Add(optimization.XamlDiagnostic);
+                }
             }
 
             if (hasBeenOptimized)
@@ -105,6 +113,6 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
             return Task.CompletedTask;
         });
 
-        return OptimizationResult.From(xamlFilesChanges);
+        return OptimizationResult.From(xamlFilesChanges, xamlDiagnostics: xamlDiagnostics);
     }
 }

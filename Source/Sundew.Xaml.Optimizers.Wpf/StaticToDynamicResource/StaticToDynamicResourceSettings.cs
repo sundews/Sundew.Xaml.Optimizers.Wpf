@@ -7,16 +7,20 @@
 
 namespace Sundew.Xaml.Optimizers.Wpf.StaticToDynamicResource;
 
+using Sundew.Xaml.Optimization;
+
 /// <summary>
 /// Settings for the <see cref="StaticToDynamicResourceOptimizer"/>.
 /// </summary>
-public class StaticToDynamicResourceSettings
+public class StaticToDynamicResourceSettings : OptimizerSettings
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StaticToDynamicResourceSettings"/> class with the specified dynamic marker.
     /// </summary>
     /// <param name="dynamicMarker">The dynamic marker.</param>
-    public StaticToDynamicResourceSettings(string? dynamicMarker = null)
+    /// <param name="debug">A value indicating whether the optimizer should be debugged.</param>
+    public StaticToDynamicResourceSettings(string? dynamicMarker = null, bool debug = false)
+     : base(debug)
     {
         this.DynamicMarker = dynamicMarker ?? "🔄️";
     }

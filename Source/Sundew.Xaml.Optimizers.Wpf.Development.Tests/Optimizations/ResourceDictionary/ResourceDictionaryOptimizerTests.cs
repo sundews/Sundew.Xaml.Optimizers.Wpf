@@ -422,4 +422,55 @@ public class ResourceDictionaryOptimizerTests
 
         result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
     }
+
+    [Theory]
+    [InlineData("Application")]
+    [InlineData("UserControl")]
+    [InlineData("Page")]
+    [InlineData("Window")]
+    public async Task Optimize_When_ThereIsOneMergedResourceDictionaryMarkedWithRemoveCategoryWithSxInDesignNamespace_Then_ResultShouldBeExpectedResult2(string rootType)
+    {
+        var input = $@"<{rootType} x:Class=""Sonova.Pegasi.Fsw.App.Wpf.App""
+             xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+             xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+             xmlns:sxd=""http://sundew.dev/xaml/design""
+             Startup=""App_Startup""
+             mc:Ignorable=""sxd"">
+
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source=""pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml"" />-->
+                <ResourceDictionary Source=""/Sonova.Pegasi.Fsw.App.Wpf.Phonak;component/Themes/Designer.xaml"" sxd:ResourceDictionary.Category=""🎨"" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>
+";
+
+        var expectedResult = $@"<{rootType} x:Class=""Sonova.Pegasi.Fsw.App.Wpf.App""
+             xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+             xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+             xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+             xmlns:sxd=""http://sundew.dev/xaml/design""
+             Startup=""App_Startup""
+             mc:Ignorable=""sxd"">
+
+    <{rootType}.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary Source=""pack://application:,,,/PresentationFramework.Fluent;component/Themes/Fluent.xaml"" />-->
+                <ResourceDictionary />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </{rootType}.Resources>
+</{rootType}>";
+
+        var testee = new ResourceDictionaryOptimizer(new ResourceDictionarySettings([new OptimizationMapping("🎨", OptimizationAction.Remove)], true));
+
+        var result = await testee.OptimizeAsync(new XamlFiles([new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine), new XamlFile(XDocument.Parse(input), Substitute.For<IFileReference>(), Environment.NewLine)]), this.xamlPlatformInfo, this.projectInfo);
+
+        result.XamlFileChanges.Single().File.Document.ToString().Should().Be(XDocument.Parse(expectedResult).ToString());
+    }
 }

@@ -7,10 +7,12 @@
 
 namespace Sundew.Xaml.Optimizers.Wpf.ResourceDictionary.Internal;
 
+using Sundew.Xaml.Optimization;
+
 /// <summary>
 /// Info about how a resource dictionary should be optimized.
 /// </summary>
-internal sealed class OptimizationInfo
+internal sealed record OptimizationInfo
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="OptimizationInfo"/> class.
@@ -18,11 +20,13 @@ internal sealed class OptimizationInfo
     /// <param name="optimizationAction">The optimization action.</param>
     /// <param name="replacementType">The replacement type.</param>
     /// <param name="source">The binding.</param>
-    public OptimizationInfo(OptimizationAction optimizationAction, XamlType replacementType, string source)
+    /// <param name="xamlDiagnostic">The xaml diagnostic.</param>
+    public OptimizationInfo(OptimizationAction optimizationAction, XamlType replacementType, string source, XamlDiagnostic? xamlDiagnostic = null)
     {
         this.OptimizationAction = optimizationAction;
         this.ReplacementType = replacementType;
         this.Source = source;
+        this.XamlDiagnostic = xamlDiagnostic;
     }
 
     /// <summary>
@@ -45,4 +49,9 @@ internal sealed class OptimizationInfo
     /// The binding.
     /// </value>
     public string Source { get; }
+
+    /// <summary>
+    /// Gets diagnostic information related to XAML processing, if available.
+    /// </summary>
+    public XamlDiagnostic? XamlDiagnostic { get; }
 }

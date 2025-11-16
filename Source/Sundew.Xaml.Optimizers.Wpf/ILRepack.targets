@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="ILRepacker" BeforeTargets="PostBuildEvent" AfterTargets="Build">
+  <Target Name="ILRepacker" BeforeTargets="PostBuildEvent" AfterTargets="Build" Condition="$(Configuration.Contains('Release')) AND $(TargetFramework) != ''">
 
     <ItemGroup>
       <InputAssemblies Include="$(OutputPath)**\*.dll" />
@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ILRepack
+           DebugInfo="true"
            Parallel="true"
            Internalize="true"
            InputAssemblies="$(OutputPath)\$(AssemblyName).dll;@(InputAssemblies)"
