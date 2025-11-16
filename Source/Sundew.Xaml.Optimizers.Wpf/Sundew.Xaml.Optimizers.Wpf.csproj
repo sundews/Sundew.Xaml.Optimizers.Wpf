@@ -25,6 +25,11 @@
     <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
     <NuspecFile>Sundew.Xaml.Optimizers.Wpf.nuspec</NuspecFile>
     <NoWarn>$(NoWarn);NU5128;NU1701</NoWarn>
+    <SxowPath>$(AssemblyName).dll</SxowPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration.Contains('Release')) AND $(TargetFramework) != ''">
+    <SxowPath>$(AssemblyName).m.dll</SxowPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,7 +61,7 @@
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
-			<OutputFiles Include="$(OutputPath)\$(AssemblyName).m.dll;$(OutputPath)**\System*.dll;$(OutputPath)Sundew.Xaml.Optimization.dll" />
+			<OutputFiles Include="$(OutputPath)\$(SxowPath);$(OutputPath)**\System*.dll;$(OutputPath)Sundew.Xaml.Optimization.dll" />
 			<BuildFiles Include="$(MSBuildProjectDirectory)\build\**\*.*" />
 			<ContentFiles Include="$(MSBuildProjectDirectory)\content\**\*.*" />
     </ItemGroup>

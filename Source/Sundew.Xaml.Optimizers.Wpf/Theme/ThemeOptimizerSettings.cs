@@ -7,17 +7,21 @@
 
 namespace Sundew.Xaml.Optimizers.Wpf.Theme;
 
+using Sundew.Xaml.Optimization;
+
 /// <summary>
 /// Settings for the <see cref="ThemeOptimizer"/>.
 /// </summary>
-public class ThemeOptimizerSettings
+public class ThemeOptimizerSettings : OptimizerSettings
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ThemeOptimizerSettings"/> class.
     /// </summary>
     /// <param name="themesPath">The themes path.</param>
     /// <param name="themeModesPath">The theme mode path.</param>
-    public ThemeOptimizerSettings(string themesPath, string themeModesPath)
+    /// <param name="debug">A value indicating whether the optimizer should be debugged.</param>
+    public ThemeOptimizerSettings(string themesPath, string themeModesPath, bool debug = false)
+        : base(debug)
     {
         this.ThemesPath = themesPath;
         this.ThemeModesPath = themeModesPath;

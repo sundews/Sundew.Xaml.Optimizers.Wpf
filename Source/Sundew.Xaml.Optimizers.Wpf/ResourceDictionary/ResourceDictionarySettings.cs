@@ -8,19 +8,22 @@
 namespace Sundew.Xaml.Optimizers.Wpf.ResourceDictionary;
 
 using System.Collections.Generic;
+using Sundew.Xaml.Optimization;
 
 /// <summary>
 /// Used to deserialize settings for the <see cref="ResourceDictionaryOptimizer"/>.
 /// </summary>
-public class ResourceDictionarySettings
+public class ResourceDictionarySettings : OptimizerSettings
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ResourceDictionarySettings"/> class.
     /// </summary>
     /// <param name="optimizationMappings">The optimization mappings.</param>
-    /// <param name="replaceUncategorized">The replace uncategorized.</param>
+    /// <param name="replaceUncategorized">A value indicating whether uncategorized should be replaced.</param>
     /// <param name="defaultReplacementType">The default replacement type.</param>
-    public ResourceDictionarySettings(IReadOnlyList<OptimizationMapping> optimizationMappings, bool? replaceUncategorized = null, string? defaultReplacementType = null)
+    /// <param name="debug">A value indicating whether the optimizer should be debugged.</param>
+    public ResourceDictionarySettings(IReadOnlyList<OptimizationMapping> optimizationMappings, bool? replaceUncategorized = null, string? defaultReplacementType = null, bool debug = false)
+     : base(debug)
     {
         this.OptimizationMappings = optimizationMappings;
         this.ReplaceUncategorized = replaceUncategorized;

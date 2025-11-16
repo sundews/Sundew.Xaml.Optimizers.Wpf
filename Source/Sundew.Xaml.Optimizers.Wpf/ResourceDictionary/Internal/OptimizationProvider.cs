@@ -9,7 +9,10 @@ namespace Sundew.Xaml.Optimizers.Wpf.ResourceDictionary.Internal;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
+using Sundew.Base;
+using Sundew.Xaml.Optimization;
 
 /// <summary>
 /// Provides an optimization info based on an <see cref="XElement"/>.
@@ -66,7 +69,20 @@ internal sealed class OptimizationProvider
                 };
             }
 
-            return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, sourceAttribute.Value);
+            var (line, column) = categoryAttribute is IXmlLineInfo lineInfo ? (lineInfo.LineNumber, lineInfo.LinePosition) : (-1, -1);
+            return new OptimizationInfo(
+                OptimizationAction.None,
+                defaultReplacementType,
+                sourceAttribute.Value,
+                XamlDiagnostic.Warning(
+                    ResourceDictionaryOptimizer.CategoryNotMapped,
+                    "The element: {0} specified a category {1}, but the category was not mapping in settings.",
+                    [resourceDictionaryElement.Name, categoryAttribute.Value],
+                    resourceDictionaryElement.Document?.BaseUri ?? string.Empty,
+                    line,
+                    column,
+                    line,
+                    column));
         }
 
         return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty);

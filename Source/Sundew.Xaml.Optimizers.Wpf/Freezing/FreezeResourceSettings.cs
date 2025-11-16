@@ -10,16 +10,19 @@ namespace Sundew.Xaml.Optimizers.Wpf.Freezing;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using Sundew.Xaml.Optimization;
 
 /// <summary>Settings for <see cref="FreezeResourceOptimizer"/>.</summary>
-public class FreezeResourceSettings
+public class FreezeResourceSettings : OptimizerSettings
 {
     /// <summary>Initializes a new instance of the <see cref="FreezeResourceSettings"/> class.</summary>
     /// <param name="includeFrameworkTypes">if set to <c>true</c> [include framework types].</param>
     /// <param name="includedTypes">The included types.</param>
     /// <param name="excludedTypes">The excluded types.</param>
     /// <param name="unfreezeMarker">The unfreeze marker.</param>
-    public FreezeResourceSettings(bool includeFrameworkTypes = true, IReadOnlyList<string>? includedTypes = null, IReadOnlyList<string>? excludedTypes = null, string? unfreezeMarker = null)
+    /// <param name="debug">A value indicating whether the optimizer should be debugged.</param>
+    public FreezeResourceSettings(bool includeFrameworkTypes = true, IReadOnlyList<string>? includedTypes = null, IReadOnlyList<string>? excludedTypes = null, string? unfreezeMarker = null, bool debug = false)
+        : base(debug)
     {
         this.IncludeFrameworkTypes = includeFrameworkTypes;
         this.UnfreezeMarker = unfreezeMarker;
