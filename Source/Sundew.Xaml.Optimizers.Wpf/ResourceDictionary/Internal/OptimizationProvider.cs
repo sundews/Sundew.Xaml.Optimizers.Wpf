@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using Sundew.Base;
 using Sundew.Xaml.Optimization;
 
@@ -27,6 +28,7 @@ internal sealed class OptimizationProvider
     /// <param name="replaceUncategorized">The replace uncategorized.</param>
     /// <param name="optimizationMappings">The optimization mappings.</param>
     /// <param name="frameworkResourceDictionaryName">Name of the framework resource dictionary.</param>
+    /// <param name="xamlFileReference">The xaml file reference.</param>
     /// <returns>
     /// The optimization info.
     /// </returns>
@@ -35,7 +37,8 @@ internal sealed class OptimizationProvider
         XamlType defaultReplacementType,
         bool replaceUncategorized,
         IReadOnlyList<OptimizationMapping> optimizationMappings,
-        XName frameworkResourceDictionaryName)
+        XName frameworkResourceDictionaryName,
+        IFileReference xamlFileReference)
     {
         if (resourceDictionaryElement.Name == frameworkResourceDictionaryName)
         {
@@ -69,20 +72,20 @@ internal sealed class OptimizationProvider
                 };
             }
 
-            var (line, column) = categoryAttribute is IXmlLineInfo lineInfo ? (lineInfo.LineNumber, lineInfo.LinePosition) : (-1, -1);
+            var (startLine, startColumn, endLine, endColum) = categoryAttribute is IXmlLineInfo startLineInfo && startLineInfo.HasLineInfo() && categoryAttribute.NextAttribute is IXmlLineInfo endLineInfo && endLineInfo.HasLineInfo() ? (startLineInfo.LineNumber, startLineInfo.LinePosition, endLineInfo.LineNumber, endLineInfo.LinePosition) : (-1, -1, -1, -1);
             return new OptimizationInfo(
                 OptimizationAction.None,
                 defaultReplacementType,
                 sourceAttribute.Value,
                 XamlDiagnostic.Warning(
                     ResourceDictionaryOptimizer.CategoryNotMapped,
-                    "The element: {0} specified a category {1}, but the category was not mapping in settings.",
-                    [resourceDictionaryElement.Name, categoryAttribute.Value],
-                    resourceDictionaryElement.Document?.BaseUri ?? string.Empty,
-                    line,
-                    column,
-                    line,
-                    column));
+                    "The element: {0} specified a category: {1}, but the category was not mapping in settings.",
+                    [resourceDictionaryElement.Name.LocalName, categoryAttribute.Value],
+                    xamlFileReference.Path,
+                    startLine,
+                    startColumn,
+                    endLine,
+                    endColum));
         }
 
         return new OptimizationInfo(OptimizationAction.None, defaultReplacementType, string.Empty);

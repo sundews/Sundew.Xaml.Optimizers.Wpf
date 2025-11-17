@@ -73,7 +73,8 @@ public class ResourceDictionaryOptimizer : IXamlOptimizer
                     defaultReplacementType,
                     defaultReplaceUncategorized,
                     this.resourceDictionarySettings.OptimizationMappings,
-                    xamlPlatformInfo.SystemResourceDictionaryName);
+                    xamlPlatformInfo.SystemResourceDictionaryName,
+                    xamlFile.Reference);
                 switch (optimization.OptimizationAction)
                 {
                     case OptimizationAction.None:
